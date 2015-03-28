@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BB51AC6A4A500FC61A6 /* main.c */; };
+		ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */; };
+		ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */; };
+		ABE29BC81AC6A4BA00FC61A6 /* lexer.l in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC11AC6A4BA00FC61A6 /* lexer.l */; };
+		ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC21AC6A4BA00FC61A6 /* parser.y */; };
+		ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC31AC6A4BA00FC61A6 /* shell.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,16 @@
 /* Begin PBXFileReference section */
 		ABE29BB21AC6A4A500FC61A6 /* shell */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shell; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABE29BB51AC6A4A500FC61A6 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		ABE29BBC1AC6A4BA00FC61A6 /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all.h; sourceTree = "<group>"; };
+		ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ArgumentList.c; sourceTree = "<group>"; };
+		ABE29BBE1AC6A4BA00FC61A6 /* ArgumentList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArgumentList.h; sourceTree = "<group>"; };
+		ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = builtins.c; sourceTree = "<group>"; };
+		ABE29BC01AC6A4BA00FC61A6 /* builtins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = builtins.h; sourceTree = "<group>"; };
+		ABE29BC11AC6A4BA00FC61A6 /* lexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = lexer.l; sourceTree = "<group>"; };
+		ABE29BC21AC6A4BA00FC61A6 /* parser.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = parser.y; sourceTree = "<group>"; };
+		ABE29BC31AC6A4BA00FC61A6 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shell.c; sourceTree = "<group>"; };
+		ABE29BC41AC6A4BA00FC61A6 /* shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shell.h; sourceTree = "<group>"; };
+		ABE29BC51AC6A4BA00FC61A6 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +73,16 @@
 			isa = PBXGroup;
 			children = (
 				ABE29BB51AC6A4A500FC61A6 /* main.c */,
+				ABE29BBC1AC6A4BA00FC61A6 /* all.h */,
+				ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */,
+				ABE29BBE1AC6A4BA00FC61A6 /* ArgumentList.h */,
+				ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */,
+				ABE29BC01AC6A4BA00FC61A6 /* builtins.h */,
+				ABE29BC11AC6A4BA00FC61A6 /* lexer.l */,
+				ABE29BC21AC6A4BA00FC61A6 /* parser.y */,
+				ABE29BC31AC6A4BA00FC61A6 /* shell.c */,
+				ABE29BC41AC6A4BA00FC61A6 /* shell.h */,
+				ABE29BC51AC6A4BA00FC61A6 /* types.h */,
 			);
 			path = shell;
 			sourceTree = "<group>";
@@ -118,6 +143,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */,
+				ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */,
+				ABE29BC81AC6A4BA00FC61A6 /* lexer.l in Sources */,
+				ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */,
+				ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */,
 				ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,0 +1,11 @@
+
+// one include to rule them all
+// TODO: rename this if we come up with a clever name for our shell
+
+#ifndef OSShell_all_h
+#define OSShell_all_h
+#include "ArgumentList.h"
+#include "types.h"
+#include "builtins.h"
+#include "shell.h"
+#endif
