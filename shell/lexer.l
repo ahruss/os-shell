@@ -29,7 +29,7 @@ int readInput(char *buf, int size) {
     line = readline(prompt);
     free(prompt);
     if (!line) {
-        fprintf(stderr, "no line");
+        exitShell();
         return 0;
     }
     if (strlen(line) > size - 2) {
