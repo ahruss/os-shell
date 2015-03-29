@@ -5,40 +5,29 @@
 #include "all.h"
 %}
 
-%token WORD QUOTE END_OF_STATEMENT QUOTED_STRING PIPE
+%token WORD QUOTE END_OF_STATEMENT PIPE END_OF_PROGRAM
 %%
 
-program     :   execution
-                    {   return 0; }
-            |   empty
-                    { return 0; }
-            ;
+program       : execution               { return 0; }
+              | empty                   { return 0; }                               ;
 
-command     :   WORD args
-                    { $$ = newCommand($1, $2); }
-            |   WORD
-                    { $$ = newCommand($1, NULL); }
-            ;
+command       : word args               { $$ = newCommand($1, $2); }
+              | word                    { $$ = newCommand($1, NULL); }              ;
 
-empty       :   END_OF_STATEMENT ;
+empty         : END_OF_STATEMENT ;
 
-job         :   command
-                    {   $$ = newJob(); pushCommand($1, $$); }
-            |   command PIPE job
-                    { pipeCommandTo($1, $3); $$ = $3; }
-            ;
+job           : command                 { $$ = newJob(); pushCommand($1, $$ = newJob()); }
+              | command PIPE job        { $$ = $3; pipeCommandTo($1, $3); }         ;
 
-execution   :   job END_OF_STATEMENT
-                    { $$ = (void*)executeJob($1); }
-            ;
+execution     : job END_OF_STATEMENT    { lastReturnCode = executeJob($1); }             ;
 
-args        :   arg
-                    { $$ = newStringList($1); }
-            |   args arg
-                    { $$ = listPush($1, $2); }
-            ;
+args          : word                    { $$ = newStringList($1); }
+              | args word               { $$ = listPush($1, $2); }                  ;
 
-arg         :   WORD
-            |   QUOTED_STRING
-            ;
+word          : WORD
+              | quotedString ;
+
+quotedString  : QUOTE args QUOTE       { $$ = joinWords($2); }                     ;
+
+exit          : END_OF_PROGRAM          { exitShell(); }                            ;
 %%

@@ -4,8 +4,8 @@
 
 #ifndef OSShell_all_h
 #define OSShell_all_h
-#include "ArgumentList.h"
 #include "types.h"
+#include "ArgumentList.h"
 #include "builtins.h"
 #include "shell.h"
 #endif

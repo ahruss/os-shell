@@ -2,13 +2,16 @@
 #include <stdio.h>
 
 void yyerror(char const* s) { fprintf(stderr, "%s\n", s); }
-int yywrap() { return 1; }
+
+/** 
+ Called when we get EOF in yyparse
+ */
+int yywrap() { exitShell(); return 0; }
 
 int main(int argc, const char * argv[]) {
     while (true) {
         prompt();
-        if (yyparse()) {
-        }
+        if (yyparse()) { }
         if (lastShellError != NULL) perror(lastShellError);
         lastShellError = NULL;
     }

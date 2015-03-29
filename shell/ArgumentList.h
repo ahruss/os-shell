@@ -8,6 +8,7 @@
 
 #ifndef OSShell_list_h
 #define OSShell_list_h
+#include "all.h"
 
 typedef struct StringList {
     char* data;
@@ -45,4 +46,13 @@ unsigned int listLength(StringList* l);
  Deallocate all of a list when you're done with it.
  */
 void freeList(StringList* l);
+
+/**
+ Take a list of strings and join them together separated by spaces
+ */
+char* joinWords(StringList*);
+/**
+ Take a word as it came from the command line and remove backslash escpaes.
+ */
+char* unescape(char*, bool);
 #endif

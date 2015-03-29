@@ -11,10 +11,11 @@
 #define PIPE_READ 0
 #define PIPE_WRITE 1
 
+int lastReturnCode = 0;
 int lastErrorCode = 0;
 char* lastShellError = NULL;
 
-void printCommand(Command* c) {
+void printCommand(Command c) {
     printf("printing command %p\n", c);
     printf("\texecutable: %s\n", c->executable);
     printf("\targs: %p\n", c->args);
@@ -22,7 +23,7 @@ void printCommand(Command* c) {
     printf("\toutput: %d\n", c->output);
 }
 
-void printJob(Job* j) {
+void printJob(Job j) {
     printf("job\n");
     printf("--------------------------------------------------------------------------------\n");
     for (int i = 0; i < j->commandCount; ++i) {
@@ -31,8 +32,8 @@ void printJob(Job* j) {
     printf("--------------------------------------------------------------------------------\n");
 }
 
-Job* newJob() {
-    Job* job = malloc(sizeof(Job));
+Job newJob() {
+    Job job = malloc(sizeof(job_t));
     job->commandCount = 0;
     job->commands = 0;
     job->commandsCapacity = 0;
@@ -42,17 +43,17 @@ Job* newJob() {
 /**
  Adds a command to the job's command array, increasing its size if necessary
  */
-void pushCommand(Command* c, Job* j) {
+void pushCommand(Command c, Job j) {
     if (j->commands == 0) {
         // if we haven't created the table yet, create it
-        j->commands = malloc(sizeof(Command*));
+        j->commands = malloc(sizeof(Command));
         j->commandCount = 0;
         j->commandsCapacity = 1;
     } else if (j->commandsCapacity == j->commandCount) {
         // if there's not enough room in our table, increase its size
-        Command** oldCommands = j->commands;
+        Command* oldCommands = j->commands;
         j->commandsCapacity *= 2;
-        j->commands = malloc(sizeof(Command*) * j->commandsCapacity);
+        j->commands = malloc(sizeof(Command) * j->commandsCapacity);
         for (int i = 0; i < j->commandCount; ++i) {
             j->commands[i] = oldCommands[i];
         }
@@ -62,8 +63,8 @@ void pushCommand(Command* c, Job* j) {
     ++j->commandCount;
 }
 
-Command* newCommand(char* executable, StringList* args) {
-    Command* c = malloc(sizeof(Command));
+Command newCommand(char* executable, StringList* args) {
+    Command c = malloc(sizeof(command_t));
     c->executable = executable;
     c->args = args;
     c->input = STDIN_FILENO;
@@ -71,9 +72,9 @@ Command* newCommand(char* executable, StringList* args) {
     return c;
 }
 
-void pipeCommandTo(Command* c, Job* j) {
+void pipeCommandTo(Command c, Job j) {
     // get the command this one is piped to
-    Command* target = j->commands[j->commandCount - 1];
+    Command target = j->commands[j->commandCount - 1];
     // add this command to table
     pushCommand(c, j);
     // set the input and output for these commands in the table
@@ -93,10 +94,10 @@ int waitFor(pid_t p) {
     return WEXITSTATUS(status);
 }
 
-int executeJob(Job* j) {
+int executeJob(Job j) {
     pid_t pids[j->commandCount];
     for (int i = 0; i < j->commandCount; ++i) {
-        Command* c = j->commands[i];
+        Command c = j->commands[i];
         pids[i] = executeCommand(c);
 
         // failed to start executing the commands
@@ -141,12 +142,11 @@ char* which(char* command) {
     }
     StringList* list = getPathList();
     for (StringList* n = list; n != NULL; n = n->next) {
-
-        // FIXME assumes the paths end in slash; if they don't will fail
         // join the paths together
         unsigned long totalLength = strlen(command) + strlen(n->data) + 1 + 1;
         char* combined = malloc(totalLength);
         strcpy(combined, n->data);
+        // this might add extra slashes, but that's fine according to UNIX standard
         strcat(combined, "/");
         strcat(combined, command);
 
@@ -167,8 +167,9 @@ char* which(char* command) {
  returns the PID of the created process. If we fail to 
  create the process for some reason, returns < 0
  */
-pid_t executeCommand(Command* c) {
+pid_t executeCommand(Command c) {
     int argsCount = listLength(c->args);
+
     // need 1 for program + # args + NULL terminator
     char** args = malloc(sizeof(char*) * (1 + argsCount + 1));
     args[argsCount+1] = 0;
@@ -204,6 +205,11 @@ pid_t executeCommand(Command* c) {
         // I'm the parent process, return the PID of the process we spawned
         return forked;
     }
+}
+
+void exitShell() {
+    printf("Got exit signal, exiting.\n");
+    exit(lastShellError == 0);
 }
 
 void prompt() {

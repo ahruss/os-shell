@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Alexander Russ. All rights reserved.
 //
 
-#include "ArgumentList.h"
+#include "all.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -64,4 +64,59 @@ void freeList(StringList* l) {
         free(l->data);
         free(l);
     }
+}
+
+char getEscapeSequence(char c) {
+    switch (c) {
+        case 'a': return '\a';
+        case 'n': return '\n';
+        case 'b': return '\b';
+        case 'f': return '\f';
+        case 't': return '\t';
+        default: return c;
+    }
+}
+
+char* unescape(char* word, bool isString) {
+    unsigned long length = strlen(word);
+    char* unescaped = malloc(sizeof(char) * (length + 1));
+    bool isEscaped = false;
+    int j = 0;
+    for (int i = 0; i < length; ++i) {
+        if (word[i] != '\\' || isEscaped) {
+            if (isString && isEscaped) {
+                unescaped[j] = getEscapeSequence(word[i]);
+            } else {
+                unescaped[j] = word[i];
+            }
+            ++j;
+            isEscaped = false;
+        } else if (word[i] == '\\') {
+            isEscaped = true;
+        } else {
+            isEscaped = false;
+        }
+    }
+    return unescaped;
+}
+
+char* joinWords(StringList* list) {
+    if (list == NULL) return NULL;
+    unsigned long length = 0;
+    StringList* node = list;
+    while (node != NULL) {
+        length += strlen(node->data) + 1;
+        node = node->next;
+    }
+    char* joined = malloc(sizeof(char) * length);
+    strcpy(joined, unescape(list->data, true));
+    node = list->next;
+    while (node != NULL) {
+        strcat(joined, " ");
+        char* unescaped = unescape(node->data, true);
+        strcat(joined, unescaped);
+        free(unescaped);
+        node = node->next;
+    }
+    return joined;
 }
