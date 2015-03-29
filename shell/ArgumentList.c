@@ -97,6 +97,8 @@ char* unescape(char* word, bool isString) {
             isEscaped = false;
         }
     }
+    // make sure we have the null terminator at the end of the escaped string.
+    unescaped[j] = '\0';
     return unescaped;
 }
 
