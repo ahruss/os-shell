@@ -64,6 +64,6 @@ void exitShell() {
     exit(lastShellError == 0);
 }
 
-void prompt() {
-    printf("$ ");
+char* getPrompt() {
+    return strdup("$ ");
 }

@@ -15,6 +15,7 @@
 		ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC31AC6A4BA00FC61A6 /* shell.c */; };
 		ABE29BCD1AC7F5DD00FC61A6 /* job.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCB1AC7F5DD00FC61A6 /* job.c */; };
 		ABE29BD01AC7F5E700FC61A6 /* command.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCE1AC7F5E700FC61A6 /* command.c */; };
+		ABE29BD21AC8B4A600FC61A6 /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,6 +47,7 @@
 		ABE29BCC1AC7F5DD00FC61A6 /* job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = job.h; sourceTree = "<group>"; };
 		ABE29BCE1AC7F5E700FC61A6 /* command.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = command.c; sourceTree = "<group>"; };
 		ABE29BCF1AC7F5E700FC61A6 /* command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = command.h; sourceTree = "<group>"; };
+		ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = usr/lib/libreadline.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABE29BD21AC8B4A600FC61A6 /* libreadline.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +65,7 @@
 		ABE29BA91AC6A4A500FC61A6 = {
 			isa = PBXGroup;
 			children = (
+				ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */,
 				ABE29BB41AC6A4A500FC61A6 /* shell */,
 				ABE29BB31AC6A4A500FC61A6 /* Products */,
 			);

@@ -24,9 +24,9 @@ void yyerror(const char*);
 int yylex();
 
 /**
- Print out the prompt
+ Get the shell prompt. Freeing the memroy is the user's job.
  */
-void prompt();
+char* getPrompt();
 
 /**
  Clean up any required resources and exit the shell
@@ -43,4 +43,12 @@ char* which(char* command);
  Get the list of directories in the PATH
  */
 StringList* getPathList();
+
+/** 
+ Parse a single line of input. 
+ 
+ Should be defined in lexer.l
+ */
+int readInput(char *buf, int size);
+
 #endif

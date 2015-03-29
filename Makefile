@@ -11,7 +11,7 @@ RM=rm -f
 CC=cc
 LD=cc
 CFLAGS=-c
-LDFLAGS=-I $(SRC)
+LDFLAGS=-I $(SRC) -lreadline
 
 all: $(PROGRAM)
 
