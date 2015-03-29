@@ -5,7 +5,7 @@
 #include "all.h"
 %}
 
-%token WORD QUOTE END_OF_STATEMENT PIPE END_OF_PROGRAM
+%token WORD QUOTE END_OF_STATEMENT PIPE
 %%
 
 program       : execution               { return 0; }
@@ -28,6 +28,4 @@ word          : WORD
               | quotedString ;
 
 quotedString  : QUOTE args QUOTE       { $$ = joinWords($2); }                     ;
-
-exit          : END_OF_PROGRAM          { exitShell(); }                            ;
 %%
