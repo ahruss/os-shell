@@ -13,6 +13,8 @@
 		ABE29BC81AC6A4BA00FC61A6 /* lexer.l in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC11AC6A4BA00FC61A6 /* lexer.l */; };
 		ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC21AC6A4BA00FC61A6 /* parser.y */; };
 		ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC31AC6A4BA00FC61A6 /* shell.c */; };
+		ABE29BCD1AC7F5DD00FC61A6 /* job.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCB1AC7F5DD00FC61A6 /* job.c */; };
+		ABE29BD01AC7F5E700FC61A6 /* command.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCE1AC7F5E700FC61A6 /* command.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,6 +42,10 @@
 		ABE29BC31AC6A4BA00FC61A6 /* shell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shell.c; sourceTree = "<group>"; };
 		ABE29BC41AC6A4BA00FC61A6 /* shell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shell.h; sourceTree = "<group>"; };
 		ABE29BC51AC6A4BA00FC61A6 /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.h; sourceTree = "<group>"; };
+		ABE29BCB1AC7F5DD00FC61A6 /* job.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = job.c; sourceTree = "<group>"; };
+		ABE29BCC1AC7F5DD00FC61A6 /* job.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = job.h; sourceTree = "<group>"; };
+		ABE29BCE1AC7F5E700FC61A6 /* command.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = command.c; sourceTree = "<group>"; };
+		ABE29BCF1AC7F5E700FC61A6 /* command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = command.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +88,10 @@
 				ABE29BC21AC6A4BA00FC61A6 /* parser.y */,
 				ABE29BC31AC6A4BA00FC61A6 /* shell.c */,
 				ABE29BC41AC6A4BA00FC61A6 /* shell.h */,
+				ABE29BCB1AC7F5DD00FC61A6 /* job.c */,
+				ABE29BCC1AC7F5DD00FC61A6 /* job.h */,
+				ABE29BCE1AC7F5E700FC61A6 /* command.c */,
+				ABE29BCF1AC7F5E700FC61A6 /* command.h */,
 				ABE29BC51AC6A4BA00FC61A6 /* types.h */,
 			);
 			path = shell;
@@ -144,8 +154,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */,
+				ABE29BD01AC7F5E700FC61A6 /* command.c in Sources */,
 				ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */,
 				ABE29BC81AC6A4BA00FC61A6 /* lexer.l in Sources */,
+				ABE29BCD1AC7F5DD00FC61A6 /* job.c in Sources */,
 				ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */,
 				ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */,
 				ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */,
@@ -262,6 +274,7 @@
 				ABE29BBB1AC6A4A500FC61A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

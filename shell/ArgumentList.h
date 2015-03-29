@@ -8,8 +8,7 @@
 
 #ifndef OSShell_list_h
 #define OSShell_list_h
-#include "all.h"
-
+#include "types.h"
 typedef struct StringList {
     char* data;
     struct StringList* next;

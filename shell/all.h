@@ -6,6 +6,8 @@
 #define OSShell_all_h
 #include "types.h"
 #include "ArgumentList.h"
+#include "command.h"
+#include "job.h"
 #include "builtins.h"
 #include "shell.h"
 #endif
