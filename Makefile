@@ -19,11 +19,11 @@ $(PROGRAM): $(TEMP)lex.yy.c $(TEMP)y.tab.c $(SH_LIST)
 	$(MKDIR)
 	$(LD) $(LDFLAGS) $(TEMP)lex.yy.c $(TEMP)y.tab.c $(SH_LIST) -o $(PROGRAM)
 
-$(TEMP)lex.yy.c: $(TEMP) $(SRC)lexer.l
+$(TEMP)lex.yy.c: $(SRC)lexer.l
 	$(MKDIR)
 	lex --outfile $(TEMP)lex.yy.c $(SRC)lexer.l 
 
-$(TEMP)y.tab.c:	$(TEMP)	$(SRC)parser.y
+$(TEMP)y.tab.c:	$(SRC)parser.y
 	$(MKDIR)
 	yacc -d $(SRC)parser.y --output-file $(TEMP)y.tab.c
 
@@ -33,7 +33,8 @@ $(OBJ)%.o: $(SRC)%.c
 	
 
 clean:
-	$(RM) $(SH_LIST) $(TEMP)lex.yy.c $(TEMP)y.tab.c $(PROGRAM)
+	$(RM) $(SH_LIST) $(TEMP)lex.yy.c $(TEMP)y.tab.c $(PROGRAM) $(TEMP)y.output $(TEMP)y.tab.h
+	rmdir $(TEMP) $(BIN) $(OBJ)
 	
 
 
