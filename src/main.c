@@ -1,8 +1,6 @@
 #include "all.h"
 #include <string.h>
 #include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 void yyerror(char const* s) { fprintf(stderr, "%s\n", s); }
 int yyparse(void);

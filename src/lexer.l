@@ -2,39 +2,46 @@
 #include <stdio.h>
 #include <string.h>
 #define YYSTYPE void*
-#include <readline/readline.h>
 #include "y.tab.h"
 #include "shell.h"
-
-#define HAVE_LIBREADLINE
-#define HAVE_READLINE_HISTORY
 
 int readInput(char *buf, int size);
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
+
+#ifdef HAS_READLINE
+#include <readline/readline.h>
+#endif
 
 int yyparse(void);
 char* getPrompt();
 %}
 %%
 ([^\<\>\|\"\\\& \t\n\$\{\}]+|\\.)+       yylval = strdup(yytext); return WORD;
-\"                                 yylval = strdup(yytext); return QUOTE;
-[ \t]                              yylval = strdup(yytext);return WHITESPACE;
-2\>\&1                             yylval = strdup(yytext);return ERR_EQUALS_OUT;
-2\>                                yylval = strdup(yytext);return ERROR_REDIRECT;
-\|                                 yylval = strdup(yytext);return PIPE;
-\n                                 yylval = strdup(yytext);return END_OF_STATEMENT;
-\<                                 yylval = strdup(yytext);return LEFT_ARROW;
-\>                                 yylval = strdup(yytext);return RIGHT_ARROW;
-\&                                 yylval = strdup(yytext);return BACKGROUND;
-\$\{                               yylval = strdup(yytext);return OPEN_VARIABLE;
-\}                                 yylval = strdup(yytext);return CLOSE_VARIABLE;
+\"                                       yylval = strdup(yytext); return QUOTE;
+[ \t]                                    yylval = strdup(yytext);return WHITESPACE;
+2\>\&1                                   yylval = strdup(yytext);return ERR_EQUALS_OUT;
+2\>                                      yylval = strdup(yytext);return ERROR_REDIRECT;
+\|                                       yylval = strdup(yytext);return PIPE;
+\n                                       yylval = strdup(yytext);return END_OF_STATEMENT;
+\<                                       yylval = strdup(yytext);return LEFT_ARROW;
+\>                                       yylval = strdup(yytext);return RIGHT_ARROW;
+\&                                       yylval = strdup(yytext);return BACKGROUND;
+\$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
+\}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
 %%
 
 int readInput(char *buf, int size) {
-    char *line;
+    char *line = NULL;
+    size_t lineSize = 0;
     char* prompt = getPrompt();
-    line = readline(prompt);
+
+    #ifdef HAS_READLINE
+        line = readline(prompt);
+    #else
+        printf("%s", prompt);
+        getline(&line, &lineSize, yyin);
+    #endif
     free(prompt);
     if (!line) {
         exitShell();
@@ -45,8 +52,12 @@ int readInput(char *buf, int size) {
         return 0;
     }
     strcpy(buf, line);
-    strcat(buf, "\n");
+    #ifdef HAS_READLINE
+        strcat(buf, "\n");
+    #endif
     free(line);
-    add_history(buf);
+    #ifdef HAS_READLINE_HISTORY
+        add_history(buf);
+    #endif
     return (int)strlen(buf);
 }
