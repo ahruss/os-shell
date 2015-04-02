@@ -60,7 +60,6 @@ int bye(char **args) {
     return 1;
 }
 
-
 int isBuiltin(char* command) {
     for(int i = 0; i < NUMBUILTINS; i++) {
         if(strcmp(command, builtin_commands[i]) == 0) {

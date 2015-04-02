@@ -8,9 +8,9 @@
 #define HAVE_LIBREADLINE
 #define HAVE_READLINE_HISTORY
 
-//int readInput(char *buf, int size);
-//#undef YY_INPUT
-//#define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
+int readInput(char *buf, int size);
+#undef YY_INPUT
+#define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
 
 int yyparse(void);
 char* getPrompt();

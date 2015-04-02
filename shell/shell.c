@@ -12,7 +12,6 @@ int lastReturnCode = 0;
 int lastErrorCode = 0;
 char* lastShellError = NULL;
 
-
 /**
  Get the list of directories in the PATH
  */
@@ -69,7 +68,6 @@ char* getPrompt() {
 }
 
 char* expandVariable(char* name) {
-    printf("expanding variable: %s\n", name);
     char* value = getenv(name);
     return value;
 }
