@@ -13,6 +13,7 @@ int yyparse(void);
 int yywrap() { /*exitShell();*/ return 0; }
 
 int main(int argc, const char * argv[]) {
+    initShell();
     while (true) {
         char* prompt = getPrompt();
         if (yyparse()) {

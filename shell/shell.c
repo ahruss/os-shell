@@ -34,7 +34,7 @@ StringList* getPathList() {
 
 char* which(char* command) {
     if (access(command, X_OK) != -1) {
-        return command;
+        return strdup(command);
     }
     StringList* list = getPathList();
     for (StringList* n = list; n != NULL; n = n->next) {

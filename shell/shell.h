@@ -29,6 +29,11 @@ int yylex();
 char* getPrompt();
 
 /**
+ Called when the shell first starts up
+ */
+void initShell();
+
+/**
  Clean up any required resources and exit the shell
  */
 void exitShell();

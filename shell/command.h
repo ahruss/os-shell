@@ -2,6 +2,7 @@
 #define __shell__command__
 #include "ArgumentList.h"
 #include <unistd.h>
+#include <stdio.h>
 
 /**
  A single process to be executed.
@@ -17,6 +18,15 @@ typedef struct command_t {
      The file descriptor number of the input for this command
      */
     int input;
+
+    /**
+     The file descriptor number of the standard error for this command
+     */
+    int error;
+
+    FILE* inputFile;
+    FILE* outputFile;
+    FILE* errorFile;
 } command_t;
 
 typedef command_t* Command;

@@ -17,10 +17,15 @@ char* getPrompt();
 %}
 %%
 ([^\<\>\|\"\\\& \t\n]+|\\.)+       yylval = strdup(yytext); return WORD;
-\"                          yylval = strdup(yytext); return QUOTE;
-[ \t]                       /* ignored */
-\|                          return PIPE;
-\n                          return END_OF_STATEMENT;
+\"                                 yylval = strdup(yytext); return QUOTE;
+[ \t]                              /* ignored */
+2\>\&1                             yylval = strdup(yytext);return ERR_EQUALS_OUT;
+2\>                                yylval = strdup(yytext);return ERROR_REDIRECT;
+\|                                 yylval = strdup(yytext);return PIPE;
+\n                                 yylval = strdup(yytext);return END_OF_STATEMENT;
+\<                                 yylval = strdup(yytext);return LEFT_ARROW;
+\>                                 yylval = strdup(yytext);return RIGHT_ARROW;
+\&                                 yylval = strdup(yytext);return BACKGROUND;
 %%
 
 int readInput(char *buf, int size) {

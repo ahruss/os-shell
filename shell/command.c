@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 void printCommand(Command c) {
     printf("printing command %p\n", c);
@@ -14,10 +15,17 @@ void printCommand(Command c) {
 
 Command newCommand(char* executable, StringList* args) {
     Command c = malloc(sizeof(command_t));
+    printf("executable in new command: %s %p\n", executable, executable);
     c->executable = executable;
     c->args = args;
+
+    c->inputFile = NULL;
+    c->outputFile = NULL;
+    c->errorFile = NULL;
+
     c->input = STDIN_FILENO;
     c->output = STDOUT_FILENO;
+    c->error = STDERR_FILENO;
     return c;
 }
 
@@ -27,12 +35,60 @@ void freeCommand(Command c) {
     free(c);
 }
 
+pid_t __executeBuiltin(Command c) {
+
+    // TODO: should probably check here we didn't try to redirect output or input
+
+    assert(isBuiltin(c->executable));
+    // just execute in the current process; builtins need access to our address space
+    executeBuiltin(c->executable, c->args);
+    return 0;
+}
+
+pid_t __executeNonBuiltin(Command c, char** args) {
+    // figure out which program to run
+    char* program = which(c->executable);
+
+    // if there wasn't a program to execute, don't even try to fork a new process
+    if (program == NULL) {
+        lastShellError = "Unknown program";
+        return -1;
+    }
+
+    pid_t forked = fork();
+    if (forked == -1) {
+        // If we can't fork the process, there's an error.
+        lastShellError = "Failed to fork process.";
+        return -1;
+    } else if (forked == 0) {
+        // Child process; the command we executed.
+
+        // Set the file descriptors for IO
+        dup2(c->input, STDIN_FILENO);
+        dup2(c->output, STDOUT_FILENO);
+        dup2(c->error, STDERR_FILENO);
+
+        // start the comand
+        execv(program, args);
+        // if execv failed return failure
+        return -1;
+    } else {
+        if (c->outputFile != NULL) { fclose(c->outputFile); }
+        if (c->inputFile != NULL) { fclose(c->inputFile); }
+        if (c->errorFile != NULL) { fclose(c->errorFile); }
+        free(program);
+        // I'm the parent process, return the PID of the process we spawned
+        return forked;
+    }
+}
+
 /**
  tries to create a new process for the command to execute
  returns the PID of the created process. If we fail to 
  create the process for some reason, returns < 0
  */
 pid_t executeCommand(Command c) {
+    printf("Executing: %s\n", c->executable);
     int argsCount = listLength(c->args);
 
     // need 1 for program + # args + NULL terminator
@@ -44,32 +100,15 @@ pid_t executeCommand(Command c) {
         args[k + 1] = findElement(c->args, k);
     }
 
-    // figure out which program to run
-    char* program = which(c->executable);
-
-    // if there wasn't a program to execute or we can't fork a new
-    // process for some reason, indicate failure
-    pid_t forked;
-    if (program == NULL) {
-        lastShellError = "Unknown program";
-        return -1;
-    } else if ((forked = fork()) == -1) {
-        lastShellError = "Failed to fork process.";
-        return -1;
-    } else if (forked == 0) {
-        // Child process; the command we executed.
-
-        // Set the file descriptors for IO
-        dup2(c->input, STDIN_FILENO);
-        dup2(c->output, STDOUT_FILENO);
-
-        // start the comand
-        execv(program, args);
-        return -1;
-    } else {
-        free(args);
-        free(program);
-        // I'm the parent process, return the PID of the process we spawned
-        return forked;
+    pid_t spawnedProcess = -1;
+    if (isBuiltin(c->executable)) {
+        spawnedProcess = __executeBuiltin(c);
     }
+    else {
+        spawnedProcess = __executeNonBuiltin(c, args);
+    }
+    free(args);
+    return spawnedProcess;
+
 }
+
