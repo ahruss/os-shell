@@ -3,6 +3,14 @@
 
 #define NUMBUILTINS 7
 
+int set_env(StringList *stringList);
+int printenv(StringList *stringList);
+int unset_env(StringList *stringList);
+int cd(StringList *stringList);
+int alias(StringList *stringList);
+int unalias(StringList *stringList);
+int bye(StringList *stringList);
+
 char* builtin_commands[] = {
     "setenv",
     "printenv",
@@ -13,7 +21,7 @@ char* builtin_commands[] = {
     "bye"
 };
 
-int (*builtin_functions[]) (char **) = {
+int (*builtin_functions[]) (StringList *) = {
     &set_env,
     &printenv,
     &unset_env,
@@ -23,24 +31,39 @@ int (*builtin_functions[]) (char **) = {
     &bye
 };
 
-int set_env(char **args) {
-    return 1;
-}
-
-int printenv(char **args) {
-    return 1;
-}
-
-int unset_env(char **args) {
-    return 1;
-}
-
-int cd(char **args) {
-    if(args[1] == NULL) {
-        fprintf(stderr, "expected an argument to cd");
+int set_env(StringList *stringList) {
+    if(listLength(stringList) != 2) {
+        fprintf(stderr, "Error: There must be exactly two arguments for setenv");
         return -1;
+    }
+    if(setenv(findElement(stringList, 0), findElement(stringList, 1), 1) != 0) {
+        fprintf(stderr, "Error: There is insufficient space in the environment. ");
+    }
+    return 1;
+}
+
+int printenv(StringList *stringList) {
+    return 1;
+}
+
+int unset_env(StringList *stringList) {
+    if(listLength(stringList) != 1) {
+        fprintf(stderr, "Error: There must be exactly 1 argument for unset_env");
+        return -1;
+    }
+    unsetenv(findElement(stringList, 0));
+    return 1;
+}
+
+int cd(StringList *stringList) {
+    if(listLength(stringList)  > 1) {
+        fprintf(stderr, "Error: There must be either 0 or 1 argument to cd");
+        return -1;
+    }
+    if(listLength(stringList) == 0) {
+        chdir(getenv("HOME"));
     } else {
-        if(chdir(args[1]) != 0) {
+        if(chdir(findElement(stringList, 0)) != 0) {
             fprintf(stderr, "Error: invalid directory");
             return -1;
         }
@@ -48,15 +71,15 @@ int cd(char **args) {
     return 1;
 }
 
-int alias(char **args) {
+int alias(StringList *stringList) {
     return 1;
 }
 
-int unalias(char **args) {
+int unalias(StringList *stringList) {
     return 1;
 }
 
-int bye(char **args) {
+int bye(StringList *stringList) {
     return 1;
 }
 
@@ -70,8 +93,8 @@ int isBuiltin(char* command) {
     return -1;
 }
 
-int executeBuiltin(char* command, StringList* args) {
+int executeBuiltin(char* command, StringList* args, int commandIndex) {
     // TODO: implement builtins
     printf("Executing builtin: %s, args %p", command, args);
-    return 0;
+    return (*builtin_functions[commandIndex])(args);
 }
