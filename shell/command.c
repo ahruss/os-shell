@@ -15,7 +15,6 @@ void printCommand(Command c) {
 
 Command newCommand(char* executable, StringList* args) {
     Command c = malloc(sizeof(command_t));
-    printf("executable in new command: %s %p\n", executable, executable);
     c->executable = executable;
     c->args = args;
 
@@ -88,7 +87,6 @@ pid_t __executeNonBuiltin(Command c, char** args) {
  create the process for some reason, returns < 0
  */
 pid_t executeCommand(Command c) {
-    printf("Executing: %s\n", c->executable);
     int argsCount = listLength(c->args);
 
     // need 1 for program + # args + NULL terminator

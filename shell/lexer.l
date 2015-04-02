@@ -4,6 +4,7 @@
 #define YYSTYPE void*
 #include <readline/readline.h>
 #include "y.tab.h"
+#include "shell.h"
 
 #define HAVE_LIBREADLINE
 #define HAVE_READLINE_HISTORY
@@ -47,5 +48,5 @@ int readInput(char *buf, int size) {
     strcat(buf, "\n");
     free(line);
     add_history(buf);
-    return strlen(buf);
+    return (int)strlen(buf);
 }

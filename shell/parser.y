@@ -14,43 +14,43 @@ program         : execution
                         { return 0; }
                 ;
 
-command         : word whitespace args
-                        { $$ = newCommand($1, $3); }
+command         : word args
+                        { $$ = newCommand($1, $2); }
                 | word
                         { $$ = newCommand($1, NULL); }                                        ;
 
-empty           : whitespace END_OF_STATEMENT
+empty           : END_OF_STATEMENT
                 ;
 
 job             : command
                         { $$ = newJob(); pushCommand($1, $$ = newJob()); }
-                | command whitespace PIPE whitespace job
-                        { $$ = $5; pipeCommandTo($1, $5); }
+                | command PIPE job
+                        { $$ = $3; pipeCommandTo($1, $$); }
                 ;
 
-execution       : job whitespace stdinRedirect whitespace stdoutRedirect whitespace stderrRedirect whitespace background whitespace  END_OF_STATEMENT
-                        { lastReturnCode = executeJob($1, $3, $5, $7, $9 != NULL); }
+execution       : job stdinRedirect stdoutRedirect stderrRedirect background END_OF_STATEMENT
+                        { lastReturnCode = executeJob($1, $2, $3, $4, $5 != NULL); }
                 ;
 
 stdinRedirect   :
                         { $$ = makeRedirect(NULL, RedirectTypeNone); }
-                |   LEFT_ARROW whitespace word
-                        { $$ = makeRedirect($3, RedirectTypeRead); }
+                |   LEFT_ARROW word
+                        { $$ = makeRedirect($2, RedirectTypeRead); }
                 ;
 
 stdoutRedirect  :
                         { $$ = makeRedirect(NULL, RedirectTypeNone); }
-                |   RIGHT_ARROW whitespace word
-                        { $$ = makeRedirect($3, RedirectTypeWrite); }
-                |   RIGHT_ARROW RIGHT_ARROW whitespace word
-                        { $$ = makeRedirect($4, RedirectTypeAppend); }                 ;
+                |   RIGHT_ARROW word
+                        { $$ = makeRedirect($2, RedirectTypeWrite); }
+                |   RIGHT_ARROW RIGHT_ARROW word
+                        { $$ = makeRedirect($3, RedirectTypeAppend); }                 ;
 
 stderrRedirect   :
                         { $$ = makeRedirect(NULL, RedirectTypeNone); }
                  | ERR_EQUALS_OUT
                         { $$ = makeRedirect(NULL, RedirectTypeEquals); }
-                 | ERROR_REDIRECT whitespace word
-                        { $$ = makeRedirect($3, RedirectTypeWrite); }                 ;
+                 | ERROR_REDIRECT word
+                        { $$ = makeRedirect($2, RedirectTypeWrite); }                 ;
 
 background       :
                         { $$ = NULL; }
@@ -59,14 +59,15 @@ background       :
 
 args            : word
                         { $$ = newStringList($1); }
-                | args whitespace word
+                | args word
                         { $$ = listPush($1, $2); }
                 ;
 
 expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE
                         { $$ = expandVariable($2); };
 
-word            : WORD
+word            : whitespace word whitespace { $$ = $2; }
+                | WORD
                 | quotedString
                 | expandedVariable;
 
