@@ -59,4 +59,9 @@ char* joinWords(StringList*);
  Take a word as it came from the command line and remove backslash escpaes.
  */
 char* unescape(char*, bool);
+
+/**
+ Returns true iff any of the elements of the list matches the second argument
+ */
+bool listContains(StringList*, char*);
 #endif

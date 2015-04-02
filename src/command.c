@@ -88,6 +88,12 @@ pid_t __executeNonBuiltin(Command c, char** args) {
  */
 pid_t executeCommand(Command c) {
 
+    // if any of the args are NULL, there was probably a problem with
+    // variable expansion
+    if (listContains(c->args, NULL)) {
+        return -1;
+    }
+
     c->args = expandWildcards(c->args);
     int argsCount = listLength(c->args);
 

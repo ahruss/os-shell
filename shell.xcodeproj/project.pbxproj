@@ -69,7 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */,
-				ABE29BB41AC6A4A500FC61A6 /* shell */,
+				ABE29BB41AC6A4A500FC61A6 /* src */,
 				ABE29BB31AC6A4A500FC61A6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -82,7 +82,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		ABE29BB41AC6A4A500FC61A6 /* shell */ = {
+		ABE29BB41AC6A4A500FC61A6 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				ABE29BB51AC6A4A500FC61A6 /* main.c */,
@@ -103,7 +103,7 @@
 				ABE29BCF1AC7F5E700FC61A6 /* command.h */,
 				ABE29BC51AC6A4BA00FC61A6 /* types.h */,
 			);
-			path = shell;
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -1,4 +1,4 @@
-SRC=shell/
+SRC=src/
 TEMP=tmp/
 OBJ=obj/
 BIN=bin/

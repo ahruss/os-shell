@@ -17,7 +17,7 @@ int yyparse(void);
 char* getPrompt();
 %}
 %%
-([^\<\>\|\"\\\& \t\n(\$\{)\}]+|\\.)+       yylval = strdup(yytext); return WORD;
+([^\<\>\|\"\\\& \t\n\$\{\}]+|\\.)+       yylval = strdup(yytext); return WORD;
 \"                                 yylval = strdup(yytext); return QUOTE;
 [ \t]                              yylval = strdup(yytext);return WHITESPACE;
 2\>\&1                             yylval = strdup(yytext);return ERR_EQUALS_OUT;

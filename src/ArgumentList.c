@@ -130,3 +130,18 @@ char* joinWords(StringList* list) {
     }
     return joined;
 }
+
+bool listContains(StringList* haystack, char* needle) {
+    StringList* node = haystack;
+    while (node != NULL) {
+        if (needle == NULL) {
+            if (node->data == needle) {
+                return true;
+            }
+        } else if (node->data == needle || strcmp(needle, node->data) == 0) {
+            return true;
+        }
+        node = node->next;
+    }
+    return false;
+}
