@@ -56,4 +56,7 @@ StringList* getPathList();
  */
 int readInput(char *buf, int size);
 
+
+char* expandVariable(char* name);
+
 #endif

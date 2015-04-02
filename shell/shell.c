@@ -68,6 +68,11 @@ char* getPrompt() {
     return strdup("$ ");
 }
 
+char* expandVariable(char* name) {
+    printf("expanding variable: %s\n", name);
+    char* value = getenv(name);
+    return value;
+}
 
 void initShell() {
     // currently does nothing

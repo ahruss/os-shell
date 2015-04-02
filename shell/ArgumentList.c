@@ -114,7 +114,6 @@ char* joinWords(StringList* list) {
     strcpy(joined, unescape(list->data, true));
     node = list->next;
     while (node != NULL) {
-        strcat(joined, " ");
         char* unescaped = unescape(node->data, true);
         strcat(joined, unescaped);
         free(unescaped);

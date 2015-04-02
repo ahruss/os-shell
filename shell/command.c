@@ -101,7 +101,7 @@ pid_t executeCommand(Command c) {
     }
 
     pid_t spawnedProcess = -1;
-    if (isBuiltin(c->executable)) {
+    if (isBuiltin(c->executable) != -1) {
         spawnedProcess = __executeBuiltin(c);
     }
     else {

@@ -8,17 +8,17 @@
 #define HAVE_LIBREADLINE
 #define HAVE_READLINE_HISTORY
 
-int readInput(char *buf, int size);
-#undef YY_INPUT
-#define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
+//int readInput(char *buf, int size);
+//#undef YY_INPUT
+//#define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
 
 int yyparse(void);
 char* getPrompt();
 %}
 %%
-([^\<\>\|\"\\\& \t\n]+|\\.)+       yylval = strdup(yytext); return WORD;
+([^\<\>\|\"\\\& \t\n(\$\{)\}]+|\\.)+       yylval = strdup(yytext); return WORD;
 \"                                 yylval = strdup(yytext); return QUOTE;
-[ \t]                              /* ignored */
+[ \t]                              yylval = strdup(yytext);return WHITESPACE;
 2\>\&1                             yylval = strdup(yytext);return ERR_EQUALS_OUT;
 2\>                                yylval = strdup(yytext);return ERROR_REDIRECT;
 \|                                 yylval = strdup(yytext);return PIPE;
@@ -26,6 +26,8 @@ char* getPrompt();
 \<                                 yylval = strdup(yytext);return LEFT_ARROW;
 \>                                 yylval = strdup(yytext);return RIGHT_ARROW;
 \&                                 yylval = strdup(yytext);return BACKGROUND;
+\$\{                               yylval = strdup(yytext);return OPEN_VARIABLE;
+\}                                 yylval = strdup(yytext);return CLOSE_VARIABLE;
 %%
 
 int readInput(char *buf, int size) {
