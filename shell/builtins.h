@@ -4,13 +4,5 @@
 
 int isBuiltin(char* command);
 
-int set_env(char **args);
-int printenv(char **args);
-int unset_env(char **args);
-int cd(char **args);
-int alias(char **args);
-int unalias(char **args);
-int bye(char **args);
-
-int executeBuiltin(char* command, StringList* args);
+int executeBuiltin(char* command, StringList* args, int commandIndex);
 #endif /* defined(__OSShell__builtins__) */

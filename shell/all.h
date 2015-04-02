@@ -10,4 +10,6 @@
 #include "job.h"
 #include "builtins.h"
 #include "shell.h"
+#include "AliasTable.h"
+
 #endif
