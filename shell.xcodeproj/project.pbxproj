@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		073A92BA1ACDF86700106F2E /* AliasTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 073A92B81ACDF86700106F2E /* AliasTable.c */; };
 		ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BB51AC6A4A500FC61A6 /* main.c */; };
 		ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */; };
 		ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */; };
@@ -31,6 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		073A92B81ACDF86700106F2E /* AliasTable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AliasTable.c; sourceTree = "<group>"; };
+		073A92B91ACDF86700106F2E /* AliasTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliasTable.h; sourceTree = "<group>"; };
 		ABE29BB21AC6A4A500FC61A6 /* shell */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shell; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABE29BB51AC6A4A500FC61A6 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		ABE29BBC1AC6A4BA00FC61A6 /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all.h; sourceTree = "<group>"; };
@@ -87,6 +90,8 @@
 				ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */,
 				ABE29BBE1AC6A4BA00FC61A6 /* ArgumentList.h */,
 				ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */,
+				073A92B81ACDF86700106F2E /* AliasTable.c */,
+				073A92B91ACDF86700106F2E /* AliasTable.h */,
 				ABE29BC01AC6A4BA00FC61A6 /* builtins.h */,
 				ABE29BC11AC6A4BA00FC61A6 /* lexer.l */,
 				ABE29BC21AC6A4BA00FC61A6 /* parser.y */,
@@ -160,6 +165,7 @@
 				ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */,
 				ABE29BD01AC7F5E700FC61A6 /* command.c in Sources */,
 				ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */,
+				073A92BA1ACDF86700106F2E /* AliasTable.c in Sources */,
 				ABE29BC81AC6A4BA00FC61A6 /* lexer.l in Sources */,
 				ABE29BCD1AC7F5DD00FC61A6 /* job.c in Sources */,
 				ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */,

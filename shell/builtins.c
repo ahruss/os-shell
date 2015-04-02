@@ -3,6 +3,8 @@
 
 #define NUMBUILTINS 7
 
+extern char **environ;
+
 int set_env(StringList *stringList);
 int printenv(StringList *stringList);
 int unset_env(StringList *stringList);
@@ -43,6 +45,11 @@ int set_env(StringList *stringList) {
 }
 
 int printenv(StringList *stringList) {
+    char *var = *environ;
+    for (int i = 1; var; i++) {
+        printf("%s\n", var);
+        var = *(environ+i);
+    }
     return 1;
 }
 
@@ -80,6 +87,7 @@ int unalias(StringList *stringList) {
 }
 
 int bye(StringList *stringList) {
+    exitShell();
     return 1;
 }
 
