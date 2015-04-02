@@ -32,6 +32,15 @@ StringList* listPush(StringList* l, char* new) {
     return l;
 }
 
+/**
+ Adds an element to the front of a list and returns the new head of the list.
+ */
+StringList* listPushFront(StringList* l, char* new) {
+    StringList* node = newStringList(new);
+    node->next = l;
+    return node;
+}
+
 StringList* nodeAtIndex(StringList* l, int i) {
     if (i == 0) {
         return l;

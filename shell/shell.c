@@ -5,6 +5,7 @@
 #include <string.h>
 #include <assert.h>
 #include <signal.h>
+#include <glob.h>
 #include "shell.h"
 #include "all.h"
 
@@ -70,6 +71,24 @@ char* getPrompt() {
 char* expandVariable(char* name) {
     char* value = getenv(name);
     return value;
+}
+
+StringList* expandWildcards(StringList* list) {
+    StringList* node = list;
+    while (node != NULL) {
+        StringList* oldNext = node->next;
+        glob_t g;
+        glob(node->data, GLOB_NOCHECK, NULL, &g);
+        if (g.gl_pathc > 0) {
+            node->data = strdup(g.gl_pathv[0]);
+        }
+        for (int i = 1; i < g.gl_pathc; ++i) {
+            node->next = newStringList(strdup(g.gl_pathv[i]));
+        }
+        globfree(&g);
+        node = oldNext;
+    }
+    return list;
 }
 
 void initShell() {

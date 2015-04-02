@@ -2,7 +2,7 @@ SRC=shell/
 TEMP=tmp/
 OBJ=obj/
 BIN=bin/
-PROGRAM=$(BIN)shell
+PROGRAM=shell
 MKDIR = -@mkdir $(@D) 2>/dev/null || true # use || true to hide the error
 SH_OBJS=ArgumentList.o builtins.o main.o shell.o job.o command.o
 SH_LIST=$(addprefix $(OBJ), $(SH_OBJS))
@@ -34,7 +34,7 @@ $(OBJ)%.o: $(SRC)%.c
 
 clean:
 	$(RM) $(SH_LIST) $(TEMP)lex.yy.c $(TEMP)y.tab.c $(PROGRAM) $(TEMP)y.output $(TEMP)y.tab.h
-	rmdir $(TEMP) $(BIN) $(OBJ)
+	rmdir $(TEMP) $(OBJ)
 	
 
 

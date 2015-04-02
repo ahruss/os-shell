@@ -59,4 +59,6 @@ int readInput(char *buf, int size);
 
 char* expandVariable(char* name);
 
+StringList* expandWildcards(StringList*);
+
 #endif

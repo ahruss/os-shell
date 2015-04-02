@@ -87,6 +87,8 @@ pid_t __executeNonBuiltin(Command c, char** args) {
  create the process for some reason, returns < 0
  */
 pid_t executeCommand(Command c) {
+
+    c->args = expandWildcards(c->args);
     int argsCount = listLength(c->args);
 
     // need 1 for program + # args + NULL terminator

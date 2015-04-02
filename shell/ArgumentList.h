@@ -30,6 +30,11 @@ StringList* tailOf(StringList* l);
 StringList* listPush(StringList* l, char* new);
 
 /**
+ Adds an element to the front of a list and returns the new head of the list.
+ */
+StringList* listPushFront(StringList* l, char* new);
+
+/**
  Gets the node at index i of the given list
  
  Dies if the index is out of bounds
