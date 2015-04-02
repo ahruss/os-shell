@@ -67,3 +67,8 @@ void exitShell() {
 char* getPrompt() {
     return strdup("$ ");
 }
+
+
+void initShell() {
+    // currently does nothing
+}
