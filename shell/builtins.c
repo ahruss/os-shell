@@ -14,40 +14,49 @@ char* builtin_commands[] = {
 };
 
 int (*builtin_functions[]) (char **) = {
-    &setenv,
+    &set_env,
     &printenv,
-    &unsetenv,
+    &unset_env,
     &cd,
     &alias,
     &unalias,
     &bye
 };
 
-int setenv() {
+int set_env(char **args) {
     return 1;
 }
 
-int printenv() {
+int printenv(char **args) {
     return 1;
 }
 
-int unsetenv() {
+int unset_env(char **args) {
     return 1;
 }
 
-int cd() {
+int cd(char **args) {
+    if(args[1] == NULL) {
+        fprintf(stderr, "expected an argument to cd");
+        return -1;
+    } else {
+        if(chdir(args[1]) != 0) {
+            fprintf(stderr, "Error: invalid directory");
+            return -1;
+        }
+    }
     return 1;
 }
 
-int alias() {
+int alias(char **args) {
     return 1;
 }
 
-int unalias() {
+int unalias(char **args) {
     return 1;
 }
 
-int bye() {
+int bye(char **args) {
     return 1;
 }
 
