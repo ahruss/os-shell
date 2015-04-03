@@ -58,7 +58,7 @@ int readInput(char *buf, int size) {
         strcat(buf, "\n");
     #endif
     free(line);
-    #ifdef HAS_READLINE_HISTORY
+    #ifdef HAS_READLINE
         add_history(buf);
     #endif
     return (int)strlen(buf);

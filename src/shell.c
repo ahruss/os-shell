@@ -91,6 +91,9 @@ StringList* expandWildcards(StringList* list) {
     return list;
 }
 
+void interruptHandler(int i) {
+}
+
 void initShell() {
-    // currently does nothing
+    signal(SIGINT, interruptHandler);
 }
