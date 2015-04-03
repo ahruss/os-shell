@@ -1,4 +1,5 @@
 %{
+#include "all.h"
 #include <stdio.h>
 #include <string.h>
 #define YYSTYPE void*

@@ -11,7 +11,12 @@ RM=rm -f
 CC=cc
 LD=cc
 CFLAGS=-c
-LDFLAGS=-I $(SRC) -lreadline
+READLINE_FLAG := $(shell test -n "$(locate readline.h)")
+ifneq ($(READLINE_FLAG), 0)
+	LDFLAGS = -I $(SRC) -DHAS_READLINE -lreadline
+else
+	LDFLAGS = -I $(SRC)
+endif
 
 all: $(PROGRAM)
 
