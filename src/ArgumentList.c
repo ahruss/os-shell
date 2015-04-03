@@ -20,8 +20,13 @@ StringList* tailOf(StringList* l) {
 
 StringList* listPush(StringList* l, char* new) {
     StringList* node = newStringList(new);
-    tailOf(l)->next = node;
-    return l;
+    if (l == NULL) {
+        return node;
+    }
+    else {
+        tailOf(l)->next = node;
+        return l;
+    }
 }
 
 /**
@@ -121,6 +126,16 @@ char* joinWords(StringList* list) {
         node = node->next;
     }
     return joined;
+}
+
+StringList* listCopy(StringList* old) {
+    StringList* new = NULL;
+    StringList* node = old;
+    while (node != NULL) {
+        new = listPush(new, node->data);
+        node = node->next;
+    }
+    return new;
 }
 
 bool listContains(StringList* haystack, char* needle) {

@@ -35,6 +35,11 @@ StringList* listPush(StringList* l, char* new);
 StringList* listPushFront(StringList* l, char* new);
 
 /**
+ Returns an independent copy of the given list
+ */
+StringList* listCopy(StringList* l);
+
+/**
  Gets the node at index i of the given list
  
  Dies if the index is out of bounds
