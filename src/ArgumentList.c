@@ -1,15 +1,7 @@
-//
-//  list.c
-//  OSShell
-//
-//  Created by Alexander Russ on 3/27/15.
-//  Copyright (c) 2015 Alexander Russ. All rights reserved.
-//
-
-#include "all.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "all.h"
 
 StringList* newStringList(char* firstElement) {
     StringList* l = malloc(sizeof(StringList));

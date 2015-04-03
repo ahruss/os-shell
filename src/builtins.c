@@ -1,5 +1,6 @@
-#include "builtins.h"
 #include <stdio.h>
+#include <string.h>
+#include "builtins.h"
 
 #define NUMBUILTINS 7
 

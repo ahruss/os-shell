@@ -1,7 +1,8 @@
 %{
-#include "all.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "all.h"
 #define YYSTYPE void*
 #include "y.tab.h"
 #include "shell.h"

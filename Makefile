@@ -10,13 +10,14 @@ RM=rm -f
 
 CC=cc
 LD=cc
-CFLAGS=-c -std=c99
+CFLAGS=-c -std=c99 -D_GNU_SOURCE
+
 
 READLINE_FLAG := $(shell test "x" = "x`locate readline.h`"; echo $$?)
 ifneq ($(READLINE_FLAG), 0)
-	LDFLAGS = -std=c99 -I $(SRC) -DHAS_READLINE -lreadline
+	LDFLAGS = -std=c99 -I $(SRC) -DHAS_READLINE -lreadline -D_GNU_SOURCE
 else
-	LDFLAGS = -std=c99 -I $(SRC)
+	LDFLAGS = -std=c99 -I $(SRC) -D_GNU_SOURCE
 endif
 
 all: $(PROGRAM)
