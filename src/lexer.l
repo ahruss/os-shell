@@ -19,7 +19,9 @@ int yyparse(void);
 char* getPrompt();
 %}
 %%
-([^\<\>\|\"\\\& \t\n\$\{\}]+|\\.)+       yylval = strdup(yytext); return WORD;
+\$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
+\}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
+([^\<\>\|\"\\\& \t\n]+|\\.)+       yylval = strdup(yytext); return WORD;
 \"                                       yylval = strdup(yytext); return QUOTE;
 [ \t]                                    yylval = strdup(yytext);return WHITESPACE;
 2\>\&1                                   yylval = strdup(yytext);return ERR_EQUALS_OUT;
@@ -29,8 +31,6 @@ char* getPrompt();
 \<                                       yylval = strdup(yytext);return LEFT_ARROW;
 \>                                       yylval = strdup(yytext);return RIGHT_ARROW;
 \&                                       yylval = strdup(yytext);return BACKGROUND;
-\$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
-\}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
 %%
 
 int readInput(char *buf, int size) {
