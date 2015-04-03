@@ -80,14 +80,37 @@ int cd(StringList *stringList) {
 }
 
 int alias(StringList *stringList) {
+    //list all aliases in AliasTable
+    if(listLength(stringList) == 0) {
+        printAliasList();
+    } else {
+        if (!(listLength(stringList) >= 2)) {
+            fprintf(stderr, "Error: There must be either 0 or 2+ arguments to alias");
+            return -1;
+        }
+        if(listLength(stringList) == 2) {
+            aliasListPush(aliasList, findElement(stringList, 0), findElement(stringList, 1), 0);
+        } else {
+            aliasListPush(aliasList, findElement(stringList, 0), findElement(stringList, 1), nodeAtIndex(stringList, 2));
+        }
+    }
     return 1;
 }
 
 int unalias(StringList *stringList) {
+    if(listLength(stringList) != 1) {
+        fprintf(stderr, "Error: There must be 1 argument to unalias");
+        return -1;
+    }
+    aliasList = aliasListRemove(aliasList, findElement(stringList, 0));
     return 1;
 }
 
 int bye(StringList *stringList) {
+    if(listLength(stringList) != 0) {
+        fprintf(stderr, "Error: There must be either 0 arguments to bye");
+        return -1;
+    }
     exitShell();
     return 1;
 }

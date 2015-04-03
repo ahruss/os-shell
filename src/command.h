@@ -50,4 +50,6 @@ pid_t executeCommand(Command);
  */
 void printCommand(Command);
 
+bool isAlias(char* executable) ;
+
 #endif /* defined(__shell__command__) */
