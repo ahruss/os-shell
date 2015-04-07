@@ -109,9 +109,43 @@ AliasList* aliasListRemove(AliasList* l, char* alias) {
 void printAliasList() {
     AliasList *l = aliasList;
     for(int i = 0; i < aliasListLength(aliasList); i++) {
-        printf("%s=%s\n", l->alias, l->value);
+        printf("%s=%s", l->alias, l->value);
+        StringList *tempList = l->argsList;
+        for(int j = 0; j < listLength(tempList); j++) {
+            printf(" %s", tempList->data);
+            tempList = tempList->next;
+        }
+        printf("\n");
         l = l->next;
     }
+}
+
+StringList* parseAliasArgs(StringList *stringList) {
+    StringList *tempList = stringList;
+    StringList *argsList = newStringList(tempList->data);
+    tempList = tempList->next;
+    char* args = tempList->data;
+    
+    char* str = args;
+    char** argsArray  = NULL;
+    char*  p    = strtok (str, " ");
+    int n_spaces = 0;
+    /* split string by spaces, append to  argsArray*/
+    while (p) {
+        argsArray = realloc (argsArray, sizeof (char*) * ++n_spaces);
+        argsArray[n_spaces-1] = p;
+        p = strtok (NULL, " ");
+    }
+    
+    /* needed for NULL terminate */
+    argsArray = realloc (argsArray, sizeof (char*) * (n_spaces+1));
+    argsArray[n_spaces] = 0;
+    
+    /* add each string to the end of the argsList, return the list*/
+    for(int i = 0; i < n_spaces; i++) {
+        listPush(argsList, argsArray[i]);
+    }
+    return argsList;
 }
 
 void freeAliasList(AliasList* l) {

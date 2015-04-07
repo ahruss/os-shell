@@ -40,6 +40,9 @@ AliasList* aliasListPush(AliasList* l, char* alias, char *value, StringList *arg
  */
 AliasList* aliasListRemove(AliasList* l, char* alias);
 
+/* separate args by spaces
+ */
+StringList* parseAliasArgs(StringList *stringList);
 /**
  Find the length of the given list.
  */

@@ -84,14 +84,16 @@ int alias(StringList *stringList) {
     if(listLength(stringList) == 0) {
         printAliasList();
     } else {
-        if (!(listLength(stringList) >= 2)) {
-            fprintf(stderr, "Error: There must be either 0 or 2+ arguments to alias");
+        printf("LENGTH: %d", listLength(stringList));
+        if (!(listLength(stringList) == 2)) {
+            fprintf(stderr, "Error: There must be either 0 or 2 arguments to alias");
             return -1;
         }
-        if(listLength(stringList) == 2) {
-            aliasListPush(aliasList, findElement(stringList, 0), findElement(stringList, 1), 0);
+        StringList *argsList = parseAliasArgs(stringList);
+        if(listLength(argsList) == 2) {
+            aliasListPush(aliasList, findElement(argsList, 0), findElement(argsList, 1), 0);
         } else {
-            aliasListPush(aliasList, findElement(stringList, 0), findElement(stringList, 1), nodeAtIndex(stringList, 2));
+            aliasListPush(aliasList, findElement(argsList, 0), findElement(argsList, 1), nodeAtIndex(argsList, 2));
         }
     }
     return 1;
