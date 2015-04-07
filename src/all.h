@@ -11,5 +11,5 @@
 #include "builtins.h"
 #include "shell.h"
 #include "AliasTable.h"
-
+#include <pwd.h>
 #endif
