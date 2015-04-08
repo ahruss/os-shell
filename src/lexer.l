@@ -15,6 +15,7 @@ int readInput(char *buf, int size);
 #include <readline/readline.h>
 #endif
 
+
 int yyparse(void);
 char* getPrompt();
 %}
