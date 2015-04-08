@@ -46,6 +46,10 @@ StringList* listCopy(StringList* l);
  */
 char* findElement(StringList* l, int i);
 
+/*
+ Find StringList node at the specified index
+ */
+StringList* nodeAtIndex(StringList* l, int i);
 /**
  Find the length of the given list.
  */
