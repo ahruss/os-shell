@@ -3,6 +3,8 @@
 #include <string.h>
 #define YYSTYPE void*
 #include "all.h"
+int yydebug=1;
+
 %}
 
 %token WORD QUOTE END_OF_STATEMENT PIPE LEFT_ARROW RIGHT_ARROW ERR_EQUALS_OUT ERROR_REDIRECT BACKGROUND OPEN_VARIABLE CLOSE_VARIABLE WHITESPACE
@@ -66,8 +68,7 @@ args            : word
 expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE
                         { $$ = expandVariable($2); };
 
-word            : whitespace word whitespace { $$ = $2; }
-                | WORD
+word            : whitespace WORD whitespace { $$ = $2; }
                 | quotedString
                 | expandedVariable;
 
