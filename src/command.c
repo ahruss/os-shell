@@ -83,7 +83,7 @@ pid_t __executeNonBuiltin(Command c, char** args) {
 
 bool isAlias(char* executable) {
     AliasList* l = aliasList;
-    for(int i = 0; i < aliasListLength(l); i++) {
+    for(int i = 0; i < aliasListLength(aliasList); i++) {
         if(strcmp(executable, l->alias) == 0) {
             return true;
         }
@@ -97,12 +97,15 @@ void getExecutable(Command c) {
         return;
     }
     AliasList* l = aliasList;
-    for(int i = 0; i < aliasListLength(l); i++) {
+    for(int i = 0; i < aliasListLength(aliasList); i++) {
         if(strcmp(c->executable, l->alias) == 0){
             StringList *newList = listCopy(l->argsList);
-            tailOf(newList)->next = c->args;
-            c->args =newList;
-            c->executable = l->value;
+            if(newList !=NULL) {
+                tailOf(newList)->next = c->args;
+                c->args =newList;
+            }
+            free(c->executable);
+            c->executable = strdup(l->value);
         }
         l = l->next;
     }
@@ -132,6 +135,11 @@ pid_t executeCommand(Command c) {
     args[argsCount+1] = 0;
 
     getExecutable(c);
+    StringList *tempList = c->args;
+    while(tempList != NULL) {
+        printf("ARGS: %s", tempList->data);
+        tempList = tempList->next;
+    }
     
     args[0] = c->executable;
     for (int k = 0; k < argsCount; ++k) {
