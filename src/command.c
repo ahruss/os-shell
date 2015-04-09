@@ -128,12 +128,7 @@ pid_t executeCommand(Command c) {
     }
 
     c->args = expandWildcards(c->args);
-    int argsCount = listLength(c->args);
-
-    // need 1 for program + # args + NULL terminator
-    char** args = malloc(sizeof(char*) * (1 + argsCount + 1));
-    args[argsCount+1] = 0;
-
+    
     getExecutable(c);
     StringList *tempList = c->args;
     printf("EXECUTABLE: %s", c->executable);
@@ -141,7 +136,13 @@ pid_t executeCommand(Command c) {
         printf("ARGS: %s", tempList->data);
         tempList = tempList->next;
     }
-    //
+
+    int argsCount = listLength(c->args);
+
+    // need 1 for program + # args + NULL terminator
+    char** args = malloc(sizeof(char*) * (1 + argsCount + 1));
+    args[argsCount+1] = 0;
+
     args[0] = c->executable;
     for (int k = 0; k < argsCount; ++k) {
         args[k + 1] = findElement(c->args, k);
