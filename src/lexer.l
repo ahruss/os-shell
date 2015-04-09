@@ -37,7 +37,7 @@ char* getPrompt();
 int readInput(char *buf, int size) {
     char *line = NULL;
     char* prompt = getPrompt();
-    printf(prompt);
+    printf("%s", prompt);
     free(prompt);
     line = getNextLine();
     if (!line) {
