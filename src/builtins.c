@@ -63,8 +63,57 @@ int unset_env(StringList *stringList) {
     return 1;
 }
 
+char* getDirectoryFromUser(char *str) {
+    char *s = str;
+    int length = 0;
+    //get length from char after ~ to end or /
+    while(*s != '\0' && *s != '/'){
+        length++;
+        s++;
+    }
+    //length + null char
+    char name[length + 1];
+    for(int i = 0; i < length; i++) {
+        name[i] = *str;
+        str++;
+    }
+    name[length] = '\0';
+    //get rest of the string, use for later after directory switch.
+    int stringLen = 0;
+    while(*s != '\0') {
+        s++;
+        stringLen++;
+    }
+    char dir[stringLen + 1];
+    for(int i = 0; i < stringLen; i++) {
+        dir[i] = *str;
+        str++;
+    }
+    dir[stringLen] = '\0';
+    /*
+     look up the substring in /etc/passwd using getpwnam() and extract the user's
+     home directory from the returned struct.
+     */
+    char* homeDir;
+    if(length != 0) {
+        struct passwd *pw;
+        pw = getpwnam(name);
+        if(pw == NULL) {
+            fprintf(stderr, "Error: invalid User");
+            return NULL;
+        }
+        homeDir = (pw->pw_dir);
+    } else {
+        homeDir = getenv("HOME");
+    }
+    char* combined = malloc(sizeof(char) * (strlen(homeDir) + strlen(dir) + 1));
+    strcpy(combined, homeDir);
+    strcat(combined, dir);
+    combined[strlen(homeDir) + strlen(dir)] = '\0';
+    return combined;
+}
+
 int cd(StringList *stringList) {
-    printf("L");
     if(listLength(stringList)  > 1) {
         fprintf(stderr, "Error: There must be either 0 or 1 argument to cd");
         return -1;
@@ -78,53 +127,13 @@ int cd(StringList *stringList) {
             if(*str == '\0') {
                 chdir(getenv("HOME"));
             } else {
-                char *s = str;
-                int length = 0;
-                //get length from char after ~ to end or /
-                while(*s != '\0' && *s != '/'){
-                    length++;
-                    s++;
-                }
-                //length + null char
-                char name[length + 1];
-                for(int i = 0; i < length; i++) {
-                    name[i] = *str;
-                    str++;
-                }
-                name[length] = '\0';
-                //get rest of the string, use for later after directory switch.
-                int stringLen = 0;
-                while(*s != '\0') {
-                    s++;
-                    stringLen++;
-                }
-                char dir[stringLen + 1];
-                for(int i = 0; i < stringLen; i++) {
-                    dir[i] = *str;
-                    str++;
-                }
-                dir[stringLen] = '\0';
-                /* 
-                 look up the substring in /etc/passwd using getpwnam() and extract the user's 
-                 home directory from the returned struct.
-                 */
-                struct passwd *pw;
-                pw = getpwnam(name);
-                if(pw == NULL) {
-                    fprintf(stderr, "Error: invalid User");
-                    return -1;
-                }
-                char *homeDir = (pw->pw_dir);
-                char* combined = malloc(sizeof(char) * (strlen(homeDir) + strlen(dir) + 1));
-                strcpy(combined, homeDir);
-                strcat(combined, dir);
-                combined[strlen(homeDir) + strlen(dir)] = '\0';
-                if(chdir(combined) != 0) {
-                    free(combined);
+                char* directory = getDirectoryFromUser(str);
+                if(chdir(directory) != 0) {
+                    free(directory);
                     fprintf(stderr, "Error: invalid directory");
                     return -1;
                 } else {
-                    free(combined);
+                    free(directory);
                 }
             }
         } else {
