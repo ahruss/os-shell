@@ -131,9 +131,7 @@ pid_t executeCommand(Command c) {
     
     getExecutable(c);
     StringList *tempList = c->args;
-    printf("EXECUTABLE: %s", c->executable);
     while(tempList != NULL) {
-        printf("ARGS: %s", tempList->data);
         tempList = tempList->next;
     }
 
