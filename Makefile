@@ -4,7 +4,7 @@ OBJ=obj/
 BIN=bin/
 PROGRAM=shell
 MKDIR = -@mkdir $(@D) 2>/dev/null || true # use || true to hide the error
-SH_OBJS=ArgumentList.o builtins.o main.o shell.o job.o command.o
+SH_OBJS=ArgumentList.o builtins.o main.o shell.o job.o command.o AliasTable.o
 SH_LIST=$(addprefix $(OBJ), $(SH_OBJS))
 RM=rm -f
 

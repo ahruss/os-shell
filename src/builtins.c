@@ -64,6 +64,7 @@ int unset_env(StringList *stringList) {
 }
 
 int cd(StringList *stringList) {
+    printf("L");
     if(listLength(stringList)  > 1) {
         fprintf(stderr, "Error: There must be either 0 or 1 argument to cd");
         return -1;
@@ -71,23 +72,91 @@ int cd(StringList *stringList) {
     if(listLength(stringList) == 0) {
         chdir(getenv("HOME"));
     } else {
-        if(chdir(findElement(stringList, 0)) != 0) {
-            fprintf(stderr, "Error: invalid directory");
-            return -1;
+        char* str = findElement(stringList, 0);
+        printf("STR: %s H", str);
+        if(*str == '~') {
+            str++;
+            if(*str == '\0') {
+                chdir(getenv("HOME"));
+            } else {
+                char *s = str;
+                int length = 0;
+                //get length from char after ~ to end or /
+                while(*s != '\0' && *s != '/'){
+                    length++;
+                    s++;
+                }
+                if(*s == '/') {
+                    length++;
+                }
+                //length + null char
+                char name[length + 1];
+                for(int i = 0; i < length; i++) {
+                    name[i] = *str;
+                    str++;
+                }
+                name[length] = '\0';
+                /* 
+                 look up the substring in /etc/passwd using getpwnam() and extract the user's 
+                 home directory from the returned struct.
+                 */
+                printf("NAME: %s H", name);
+                struct passwd *pw;
+                pw = getpwnam(name);
+                if(pw == NULL) {
+                    fprintf(stderr, "Error: invalid User");
+                    return -1;
+                }
+                char *homeDir = pw->pw_dir;
+                if(chdir(homeDir) != 0) {
+                    fprintf(stderr, "Error: invalid directory");
+                    return -1;
+                }
+            }
+        } else {
+            if(chdir(str) != 0) {
+                fprintf(stderr, "Error: invalid directory");
+                return -1;
+            }
         }
     }
     return 1;
 }
 
 int alias(StringList *stringList) {
+    //list all aliases in AliasTable
+    if(listLength(stringList) == 0) {
+        printAliasList();
+    } else {
+        printf("LENGTH: %d", listLength(stringList));
+        if (!(listLength(stringList) == 2)) {
+            fprintf(stderr, "Error: There must be either 0 or 2 arguments to alias");
+            return -1;
+        }
+        StringList *argsList = parseAliasArgs(stringList);
+        if(listLength(argsList) == 2) {
+            aliasListPush(aliasList, findElement(argsList, 0), findElement(argsList, 1), 0);
+        } else {
+            aliasListPush(aliasList, findElement(argsList, 0), findElement(argsList, 1), nodeAtIndex(argsList, 2));
+        }
+    }
     return 1;
 }
 
 int unalias(StringList *stringList) {
+    if(listLength(stringList) != 1) {
+        fprintf(stderr, "Error: There must be 1 argument to unalias");
+        return -1;
+    }
+    aliasList = aliasListRemove(aliasList, findElement(stringList, 0));
     return 1;
 }
 
 int bye(StringList *stringList) {
+    if(listLength(stringList) != 0) {
+        fprintf(stderr, "Error: There must be either 0 arguments to bye");
+        return -1;
+    }
     exitShell();
     return 1;
 }

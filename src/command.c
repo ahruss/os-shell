@@ -81,11 +81,41 @@ pid_t __executeNonBuiltin(Command c, char** args) {
     }
 }
 
+bool isAlias(char* executable) {
+    AliasList* l = aliasList;
+    for(int i = 0; i < aliasListLength(l); i++) {
+        if(strcmp(executable, l->alias) == 0) {
+            return true;
+        }
+        l = l->next;
+    }
+    return false;
+}
+
+void getExecutable(Command c) {
+    if(!isAlias(c->executable)) {
+        return;
+    }
+    AliasList* l = aliasList;
+    for(int i = 0; i < aliasListLength(l); i++) {
+        if(strcmp(c->executable, l->alias) == 0){
+            StringList *newList = listCopy(l->argsList);
+            tailOf(newList)->next = c->args;
+            c->args =newList;
+            c->executable = l->value;
+        }
+        l = l->next;
+    }
+    getExecutable(c);
+}
+
+
 /**
  tries to create a new process for the command to execute
  returns the PID of the created process. If we fail to 
  create the process for some reason, returns < 0
  */
+
 pid_t executeCommand(Command c) {
 
     // if any of the args are NULL, there was probably a problem with
@@ -101,6 +131,8 @@ pid_t executeCommand(Command c) {
     char** args = malloc(sizeof(char*) * (1 + argsCount + 1));
     args[argsCount+1] = 0;
 
+    getExecutable(c);
+    
     args[0] = c->executable;
     for (int k = 0; k < argsCount; ++k) {
         args[k + 1] = findElement(c->args, k);
