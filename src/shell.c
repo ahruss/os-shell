@@ -83,8 +83,10 @@ StringList* expandWildcards(StringList* list) {
             node->data = strdup(g.gl_pathv[0]);
         }
         for (int i = 1; i < g.gl_pathc; ++i) {
-            node->next = newStringList(strdup(g.gl_pathv[i]));
+            node->next = newStringList(g.gl_pathv[i]);
+            node = node->next;
         }
+        node->next = oldNext;
         globfree(&g);
         node = oldNext;
     }

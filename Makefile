@@ -34,7 +34,7 @@ $(TEMP)lex.yy.c: $(SRC)lexer.l
 
 $(TEMP)y.tab.c:	$(SRC)parser.y
 	$(MKDIR)
-	yacc -d $(SRC)parser.y --output-file $(TEMP)y.tab.c --debug --verbose
+	yacc -d $(SRC)parser.y --output-file $(TEMP)y.tab.c
 
 $(OBJ)%.o: $(SRC)%.c
 	$(MKDIR)
