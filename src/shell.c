@@ -129,8 +129,7 @@ bool isWhitespace(char c) {
 
 static struct termios orig_termios;  /* TERMinal I/O Structure */
 
-void tty_raw(void)
-{
+void tty_raw(void) {
     struct termios old = {0};
     if (tcgetattr(0, &old) < 0)
         perror("tcsetattr()");
@@ -142,6 +141,7 @@ void tty_raw(void)
     if (tcsetattr(0, TCSANOW, &old) < 0)
         perror("tcsetattr ICANON");
 }
+
 void tty_reset(void) {
     struct termios old = {0};
     if (tcgetattr(0, &old) < 0)
@@ -151,6 +151,61 @@ void tty_reset(void) {
     old.c_cc[VINTR] = 1;
     if (tcsetattr(0, TCSADRAIN, &old) < 0)
         perror ("tcsetattr ~ICANON");
+}
+
+/**
+ Checks if a string begins with the given characters
+ */
+bool hasPrefix(const char* string, const char* prefix) {
+    long length = strlen(string);
+    long prefixLength = strlen(prefix);
+    if (prefixLength > length) {
+        return false;
+    } else {
+        for (int i = 0; i < prefixLength; ++i) {
+            if (string[i] != prefix[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+char* expand(char* lastWord) {
+    if (lastWord[0] == '~') {
+        // expand username
+        StringList* users = getUserNames();
+        StringList* matches = NULL;
+        StringList* node = users;
+        char* dir = NULL;
+        ++lastWord;
+        while (node != NULL) {
+            if (hasPrefix(node->data, lastWord)) {
+                matches = listPush(matches, node->data);
+            }
+            node = node->next;
+        }
+        if (listLength(matches) == 1) {
+            dir = getDirectoryFromUser(findElement(matches, 0));
+        }
+        freeList(users);
+        freeList(matches);
+        return dir;
+    } else {
+        long copyLength = strlen(lastWord);
+        char* copy = malloc(sizeof(char) * (copyLength + 2));
+        strcpy(copy, lastWord);
+        copy[copyLength] = '*';
+        copy[copyLength+1] = '\0';
+        // expand paths
+        StringList* paths = globPath(copy);
+        if (listLength(paths) == 1 && strcmp(copy, findElement(paths, 0)) != 0) {
+            char* result = strdup(findElement(paths, 0));
+            freeList(paths);
+            return result;
+        }
+    }
+    return NULL;
 }
 
 #define INITIAL_STRING_SIZE 255
@@ -172,35 +227,29 @@ char* getNextLine() {
             for (int i = 0; i < wordSize; ++i) {
                 lastWord[i] = cursor[i];
             }
-            lastWord[wordSize] = '*';
-            lastWord[wordSize + 1] = '\0';
-            if (*cursor == '~') {
-                // expand username
+            lastWord[wordSize] = '\0';
+            char* replacement = expand(lastWord);
+            if (replacement != NULL) {
+                // create the new command
+                *cursor = '\0';
+                long newStringLength = strlen(string) + strlen(replacement) + 1;
+                char* newString = malloc(sizeof(char) * newStringLength);
+                strcpy(newString, string);
+                strcat(newString, replacement);
                 
-            } else {
-                // expand paths
-                StringList* paths = globPath(lastWord);
-                if (listLength(paths) == 1 && strcmp(lastWord, findElement(paths, 0)) != 0) {
-                    // create the new command
-                    *cursor = '\0';
-                    long newStringLength = strlen(string) + strlen(findElement(paths, 0)) + 1;
-                    char* newString = malloc(sizeof(char) * newStringLength);
-                    strcpy(newString, string);
-                    strcat(newString, findElement(paths, 0));
-
-                    // replace the typed input with the expanded version
-                    for (int i = 0; i < length; ++i) {
-                        printf("\b");
-                        fflush(stdin);
-                    }
-                    printf("%s", newString);
+                // replace the typed input with the expanded version
+                for (int i = 0; i < length; ++i) {
+                    printf("\b");
                     fflush(stdin);
-
-                    free(string);
-                    string = newString;
-                    length = (int)newStringLength;
-                    size = length;
                 }
+                printf("%s", newString);
+                fflush(stdin);
+
+                free(replacement);
+                free(string);
+                string = newString;
+                length = (int)newStringLength;
+                size = length;
             }
         } else if (c == 3) {
             printf("^C\n");
