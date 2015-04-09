@@ -101,7 +101,7 @@ void getExecutable(Command c) {
         if(strcmp(c->executable, l->alias) == 0){
             StringList *newList = listCopy(l->argsList);
             tailOf(newList)->next = c->args;
-            c->args =newList;
+            c->args = newList;
             c->executable = l->value;
         }
         l = l->next;
@@ -115,7 +115,6 @@ void getExecutable(Command c) {
  returns the PID of the created process. If we fail to 
  create the process for some reason, returns < 0
  */
-
 pid_t executeCommand(Command c) {
 
     // if any of the args are NULL, there was probably a problem with
@@ -147,6 +146,5 @@ pid_t executeCommand(Command c) {
     }
     free(args);
     return spawnedProcess;
-
 }
 

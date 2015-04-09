@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <signal.h>
 #include <glob.h>
+#include <termios.h>
 #include "shell.h"
 #include "all.h"
 
@@ -73,24 +74,37 @@ char* expandVariable(char* name) {
     return value;
 }
 
+StringList* globPath(char* pattern) {
+    StringList* list = NULL;
+    glob_t g;
+    glob(pattern, GLOB_NOCHECK, NULL, &g);
+    if (g.gl_pathc > 0) {
+        list = newStringList(g.gl_pathv[0]);
+        pattern = strdup(g.gl_pathv[0]);
+    }
+    for (int i = 1; i < g.gl_pathc; ++i) {
+        listPush(list, g.gl_pathv[i]);
+    }
+    globfree(&g);
+    return list;
+}
+
 StringList* expandWildcards(StringList* list) {
+    StringList* first = list;
+    StringList* previous = NULL;
     StringList* node = list;
     while (node != NULL) {
-        StringList* oldNext = node->next;
-        glob_t g;
-        glob(node->data, GLOB_NOCHECK, NULL, &g);
-        if (g.gl_pathc > 0) {
-            node->data = strdup(g.gl_pathv[0]);
+        StringList* expanded = globPath(node->data);
+        if (previous == NULL) {
+            first = expanded;
+        } else {
+            previous->next = expanded;
         }
-        for (int i = 1; i < g.gl_pathc; ++i) {
-            node->next = newStringList(g.gl_pathv[i]);
-            node = node->next;
-        }
-        node->next = oldNext;
-        globfree(&g);
-        node = oldNext;
+        tailOf(expanded)->next = node->next;
+        previous = node;
+        node = node->next;
     }
-    return list;
+    return first;
 }
 
 StringList* getUserNames() {
@@ -109,29 +123,101 @@ StringList* getUserNames() {
     return userNameList;
 }
 
+bool isWhitespace(char c) {
+    return c == ' ' || c == '\t';
+}
+
+static struct termios orig_termios;  /* TERMinal I/O Structure */
+
+void tty_raw(void)
+{
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0)
+        perror("tcsetattr()");
+    old.c_lflag &= ~ICANON;
+    old.c_lflag &= ~ECHO;
+    old.c_cc[VMIN] = 1;
+    old.c_cc[VTIME] = 0;
+    old.c_cc[VINTR] = 0;
+    if (tcsetattr(0, TCSANOW, &old) < 0)
+        perror("tcsetattr ICANON");
+}
+void tty_reset(void) {
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0)
+        perror("tcsetattr()");
+    old.c_lflag |= ICANON;
+    old.c_lflag |= ECHO;
+    old.c_cc[VINTR] = 1;
+    if (tcsetattr(0, TCSADRAIN, &old) < 0)
+        perror ("tcsetattr ~ICANON");
+}
+
 #define INITIAL_STRING_SIZE 255
 char* getNextLine() {
     char* string = NULL;
     int size = 0;
     int length = 0;
-   	system("/bin/stty raw");
+    tty_raw();
     while (true) {
         char c = getchar();
         if (c == 27) {
             // escape, expand paths
-            printf("^[\n");
+            char* cursor = &string[length];
+            while (cursor != string && !isWhitespace(cursor[-1])) {
+                cursor--;
+            }
+            long wordSize = &string[length] - cursor;
+            char* lastWord = malloc(sizeof(char) * (wordSize + 2));
+            for (int i = 0; i < wordSize; ++i) {
+                lastWord[i] = cursor[i];
+            }
+            lastWord[wordSize] = '*';
+            lastWord[wordSize + 1] = '\0';
+            if (*cursor == '~') {
+                // expand username
+                
+            } else {
+                // expand paths
+                StringList* paths = globPath(lastWord);
+                if (listLength(paths) == 1 && strcmp(lastWord, findElement(paths, 0)) != 0) {
+                    // create the new command
+                    *cursor = '\0';
+                    long newStringLength = strlen(string) + strlen(findElement(paths, 0)) + 1;
+                    char* newString = malloc(sizeof(char) * newStringLength);
+                    strcpy(newString, string);
+                    strcat(newString, findElement(paths, 0));
+
+                    // replace the typed input with the expanded version
+                    for (int i = 0; i < length; ++i) {
+                        printf("\b");
+                        fflush(stdin);
+                    }
+                    printf("%s", newString);
+                    fflush(stdin);
+
+                    free(string);
+                    string = newString;
+                    length = (int)newStringLength;
+                    size = length;
+                }
+            }
         } else if (c == 3) {
             printf("^C\n");
             // Ctrl-C
             if (string != NULL) {
                 free(string);
             }
-            system ("/bin/stty cooked");
+            tty_reset();
             return strdup("\n");
         } else if (c == 4) {
             // Ctrl-D (EOF)
             exitShell();
             break;
+        } else if (c == '\b' || c == 127) {
+            // backspace
+            if (length != 0) length--;
+            printf("\b \b");
         } else {
             // normal characters
             if (string == NULL) {
@@ -146,6 +232,7 @@ char* getNextLine() {
             }
             string[length] = c;
             length++;
+            printf("%c", c);
             if (c == 13 || c == '\n') {
                 break;
             }
@@ -154,9 +241,11 @@ char* getNextLine() {
     if (string != NULL) {
         string[length] = '\0';
     }
-    system ("/bin/stty cooked");
+    tty_reset();
     return string;
 }
 
 void initShell() {
+    tcgetattr(STDIN_FILENO, &orig_termios);
 }
+
