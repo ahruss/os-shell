@@ -22,13 +22,13 @@ char* getPrompt();
 %%
 \$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
 \}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
-([^\<\>\|\"\\\& \t\n]+|\\.)+             yylval = strdup(yytext);return WORD;
+([^\<\>\|\"\\\& \t\n\r]+|\\.)+             yylval = strdup(yytext);return WORD;
 \"                                       yylval = strdup(yytext);return QUOTE;
 [ \t]                                    yylval = strdup(yytext);return WHITESPACE;
 2\>\&1                                   yylval = strdup(yytext);return ERR_EQUALS_OUT;
 2\>                                      yylval = strdup(yytext);return ERROR_REDIRECT;
 \|                                       yylval = strdup(yytext);return PIPE;
-\n                                       yylval = strdup(yytext);return END_OF_STATEMENT;
+\n|\r                                    yylval = strdup(yytext);return END_OF_STATEMENT;
 \<                                       yylval = strdup(yytext);return LEFT_ARROW;
 \>                                       yylval = strdup(yytext);return RIGHT_ARROW;
 \&                                       yylval = strdup(yytext);return BACKGROUND;
@@ -36,16 +36,10 @@ char* getPrompt();
 
 int readInput(char *buf, int size) {
     char *line = NULL;
-    size_t lineSize = 0;
     char* prompt = getPrompt();
-
-    #ifdef HAS_READLINE
-        line = readline(prompt);
-    #else
-        printf("%s", prompt);
-        getline(&line, &lineSize, yyin);
-    #endif
+    printf(prompt);
     free(prompt);
+    line = getNextLine();
     if (!line) {
         exitShell();
         return 0;
@@ -55,12 +49,7 @@ int readInput(char *buf, int size) {
         return 0;
     }
     strcpy(buf, line);
-    #ifdef HAS_READLINE
-        strcat(buf, "\n");
-    #endif
+    strcat(buf, "\n");
     free(line);
-    #ifdef HAS_READLINE
-        add_history(buf);
-    #endif
     return (int)strlen(buf);
 }

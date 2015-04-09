@@ -96,6 +96,55 @@ StringList* expandWildcards(StringList* list) {
 void interruptHandler(int i) {
 }
 
+#define INITIAL_STRING_SIZE 255
+char* getNextLine() {
+    char* string = NULL;
+    int size = 0;
+    int length = 0;
+   	system("/bin/stty raw");
+    while (true) {
+        char c = getchar();
+        if (c == 27) {
+            // escape, expand paths
+            printf("^[\n");
+        } else if (c == 3) {
+            printf("^C\n");
+            // Ctrl-C
+            if (string != NULL) {
+                free(string);
+            }
+            system ("/bin/stty cooked");
+            return strdup("\n");
+        } else if (c == 4) {
+            // Ctrl-D (EOF)
+            exitShell();
+            break;
+        } else {
+            // normal characters
+            if (string == NULL) {
+                string = malloc(sizeof(char) * INITIAL_STRING_SIZE);
+                size = INITIAL_STRING_SIZE;
+            } else if (size == length) {
+                char* newString = malloc(sizeof(char) * (size * 2));
+                size *= 2;
+                strcpy(newString, string);
+                free(string);
+                string = newString;
+            }
+            string[length] = c;
+            length++;
+            if (c == 13 || c == '\n') {
+                break;
+            }
+        }
+    }
+    if (string != NULL) {
+        string[length] = '\0';
+    }
+    system ("/bin/stty cooked");
+    return string;
+}
+
 void initShell() {
     signal(SIGINT, interruptHandler);
 }
