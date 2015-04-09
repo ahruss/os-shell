@@ -141,7 +141,7 @@ pid_t executeCommand(Command c) {
         printf("ARGS: %s", tempList->data);
         tempList = tempList->next;
     }
-    
+    //
     args[0] = c->executable;
     for (int k = 0; k < argsCount; ++k) {
         args[k + 1] = findElement(c->args, k);
