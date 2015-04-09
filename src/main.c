@@ -15,9 +15,9 @@ int main(int argc, const char * argv[]) {
     while (true) {
         char* prompt = getPrompt();
         if (yyparse()) {
-            perror("parse");
+            perror("error");
         }
-        if (lastShellError != NULL) perror(lastShellError);
+        if (lastShellError != NULL) fprintf(stderr, "%s\n", lastShellError);
         lastShellError = NULL;
         free(prompt);
     }

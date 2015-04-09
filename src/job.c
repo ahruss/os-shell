@@ -77,7 +77,9 @@ void pipeCommandTo(Command c, Job j) {
         exit(EXIT_FAILURE);
     }
     c->output = pipeDescriptors[PIPE_WRITE];
+    c->inputToClose = pipeDescriptors[PIPE_READ];
     target->input = pipeDescriptors[PIPE_READ];
+    target->outputToClose = pipeDescriptors[PIPE_WRITE];
 }
 
 int executeJob(Job j, redirect_t* in, redirect_t* out,  redirect_t* err, bool inBackground) {
