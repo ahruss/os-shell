@@ -59,7 +59,7 @@ int readInput(char *buf, int size);
 char* getNextLine();
 
 char* expandVariable(char* name);
-
+StringList* expandTildes(StringList*);
 StringList* expandWildcards(StringList*);
 
 #endif

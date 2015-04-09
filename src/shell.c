@@ -39,14 +39,19 @@ char* which(char* command) {
     }
     StringList* list = getPathList();
     for (StringList* n = list; n != NULL; n = n->next) {
+        char* dir = NULL;
+        if (n->data[0] != '~' || (dir = getDirectoryFromUser(n->data)) == NULL) {
+            dir = strdup(n->data);
+        }
         // join the paths together
-        unsigned long totalLength = strlen(command) + strlen(n->data) + 1 + 1;
+        unsigned long totalLength = strlen(command) + strlen(dir) + 1 + 1;
         char* combined = malloc(totalLength);
-        strcpy(combined, n->data);
+        strcpy(combined, dir);
         // this might add extra slashes, but that's fine according to UNIX standard
         strcat(combined, "/");
         strcat(combined, command);
 
+        free(dir);
         // if we can execute a file at the path,
         // then return that path; otherwise keep looking
         if (access(combined, X_OK) != -1) {
@@ -107,21 +112,21 @@ StringList* expandWildcards(StringList* list) {
     return first;
 }
 
-StringList* getUserNames() {
-    StringList *userNameList;
-    struct passwd *p;
-    p = getpwent();
-    if(p != NULL) {
-        userNameList = newStringList(p->pw_name);
-    } else {
-        return NULL;
+StringList* expandTildes(StringList* list) {
+    StringList* node = list;
+    while (node != NULL) {
+        if (node->data[0] == '~') {
+            char* dir = getDirectoryFromUser(node->data+1);
+            char* old = node->data;
+            node->data = dir;
+            free(old);
+        }
+        node = node->next;
     }
-    while ((p = getpwent()) != NULL){
-        listPush(userNameList, p->pw_name);
-    }
-    endpwent();
-    return userNameList;
+    return list;
 }
+
+
 
 bool isWhitespace(char c) {
     return c == ' ' || c == '\t';
@@ -153,44 +158,10 @@ void tty_reset(void) {
         perror ("tcsetattr ~ICANON");
 }
 
-/**
- Checks if a string begins with the given characters
- */
-bool hasPrefix(const char* string, const char* prefix) {
-    long length = strlen(string);
-    long prefixLength = strlen(prefix);
-    if (prefixLength > length) {
-        return false;
-    } else {
-        for (int i = 0; i < prefixLength; ++i) {
-            if (string[i] != prefix[i]) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 char* expand(char* lastWord) {
     if (lastWord[0] == '~') {
         // expand username
-        StringList* users = getUserNames();
-        StringList* matches = NULL;
-        StringList* node = users;
-        char* dir = NULL;
-        ++lastWord;
-        while (node != NULL) {
-            if (hasPrefix(node->data, lastWord)) {
-                matches = listPush(matches, node->data);
-            }
-            node = node->next;
-        }
-        if (listLength(matches) == 1) {
-            dir = getDirectoryFromUser(findElement(matches, 0));
-        }
-        freeList(users);
-        freeList(matches);
-        return dir;
+        return getDirectoryFromUser(lastWord + 1);
     } else {
         long copyLength = strlen(lastWord);
         char* copy = malloc(sizeof(char) * (copyLength + 2));
