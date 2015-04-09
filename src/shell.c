@@ -91,6 +91,22 @@ StringList* expandWildcards(StringList* list) {
     return list;
 }
 
+StringList* getUserNames() {
+    StringList *userNameList;
+    struct passwd *p;
+    p = getpwent();
+    if(p != NULL) {
+        userNameList = newStringList(p->pw_name);
+    } else {
+        return NULL;
+    }
+    while ((p = getpwent()) != NULL){
+        listPush(userNameList, p->pw_name);
+    }
+    endpwent();
+    return userNameList;
+}
+
 void initShell() {
     // currently does nothing
 }
