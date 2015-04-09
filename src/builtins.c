@@ -73,7 +73,6 @@ int cd(StringList *stringList) {
         chdir(getenv("HOME"));
     } else {
         char* str = findElement(stringList, 0);
-        printf("STR: %s H", str);
         if(*str == '~') {
             str++;
             if(*str == '\0') {
@@ -86,9 +85,6 @@ int cd(StringList *stringList) {
                     length++;
                     s++;
                 }
-                if(*s == '/') {
-                    length++;
-                }
                 //length + null char
                 char name[length + 1];
                 for(int i = 0; i < length; i++) {
@@ -96,26 +92,44 @@ int cd(StringList *stringList) {
                     str++;
                 }
                 name[length] = '\0';
+                //get rest of the string, use for later after directory switch.
+                int stringLen = 0;
+                while(*s != '\0') {
+                    s++;
+                    stringLen++;
+                }
+                char dir[stringLen + 1];
+                for(int i = 0; i < stringLen; i++) {
+                    dir[i] = *str;
+                    str++;
+                }
+                dir[stringLen] = '\0';
                 /* 
                  look up the substring in /etc/passwd using getpwnam() and extract the user's 
                  home directory from the returned struct.
                  */
-                printf("NAME: %s H", name);
                 struct passwd *pw;
                 pw = getpwnam(name);
                 if(pw == NULL) {
                     fprintf(stderr, "Error: invalid User");
                     return -1;
                 }
-                char *homeDir = pw->pw_dir;
-                if(chdir(homeDir) != 0) {
+                char *homeDir = (pw->pw_dir);
+                char* combined = malloc(sizeof(char) * (strlen(homeDir) + strlen(dir) + 1));
+                strcpy(combined, homeDir);
+                strcat(combined, dir);
+                combined[strlen(homeDir) + strlen(dir)] = '\0';
+                if(chdir(combined) != 0) {
+                    free(combined);
                     fprintf(stderr, "Error: invalid directory");
                     return -1;
+                } else {
+                    free(combined);
                 }
             }
         } else {
             if(chdir(str) != 0) {
-                fprintf(stderr, "Error: invalid directory");
+                fprintf(stderr, "Error: invalid directory or not enough perissions");
                 return -1;
             }
         }
