@@ -110,5 +110,4 @@ StringList* getUserNames() {
 }
 
 void initShell() {
-    signal(SIGINT, interruptHandler);
 }
