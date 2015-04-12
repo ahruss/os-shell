@@ -196,17 +196,26 @@ char* getNextLine() {
         char c = getchar();
         if (c == 27) {
             // escape, expand paths
+
+            // find the beginning of the last word
             char* cursor = &string[length];
             while (cursor != string && !isWhitespace(cursor[-1])) {
                 cursor--;
             }
             long wordSize = &string[length] - cursor;
+
+            // copy the last word to a new buffer
             char* lastWord = malloc(sizeof(char) * (wordSize + 2));
             for (int i = 0; i < wordSize; ++i) {
                 lastWord[i] = cursor[i];
             }
             lastWord[wordSize] = '\0';
+
+            // get the expansion
             char* replacement = expand(lastWord);
+            free(lastWord);
+
+            // if we have an expansion, actually replace it
             if (replacement != NULL) {
                 // create the new command
                 *cursor = '\0';
@@ -216,18 +225,14 @@ char* getNextLine() {
                 strcat(newString, replacement);
                 
                 // replace the typed input with the expanded version
-                for (int i = 0; i < length; ++i) {
-                    printf("\b");
-                    fflush(stdin);
-                }
-                printf("%s", newString);
-                fflush(stdin);
+                printf("\n$ %s", newString);
+                fflush(stdout);
 
                 free(replacement);
                 free(string);
                 string = newString;
-                length = (int)newStringLength;
-                size = length;
+                length = (int)newStringLength - 1;
+                size = length + 1;
             }
         } else if (c == 3) {
             printf("^C\n");
@@ -243,8 +248,10 @@ char* getNextLine() {
             break;
         } else if (c == '\b' || c == 127) {
             // backspace
-            if (length != 0) length--;
-            printf("\b \b");
+            if (length != 0) {
+                length--;
+                printf("\b \b");
+            }
         } else {
             // normal characters
             if (string == NULL) {
@@ -265,6 +272,14 @@ char* getNextLine() {
             }
         }
     }
+    if (size == length) {
+        char* newString = malloc(sizeof(char) * (size * 2));
+        size *= 2;
+        strcpy(newString, string);
+        free(string);
+        string = newString;
+    }
+
     if (string != NULL) {
         string[length] = '\0';
     }

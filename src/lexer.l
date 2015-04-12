@@ -17,7 +17,7 @@ char* getPrompt();
 %%
 \$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
 \}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
-([^\<\>\|\"\\\& \t\n\r]+|\\.)+             yylval = strdup(yytext);return WORD;
+([^\<\>\|\"\\\& \t\n\r\$\{\}]+|\\.)+             yylval = strdup(yytext);return WORD;
 \"                                       yylval = strdup(yytext);return QUOTE;
 [ \t]                                    yylval = strdup(yytext);return WHITESPACE;
 2\>\&1                                   yylval = strdup(yytext);return ERR_EQUALS_OUT;

@@ -20,6 +20,9 @@ typedef struct command_t {
      */
     int input;
 
+    int outputToClose;
+    int inputToClose;
+
     /**
      The file descriptor number of the standard error for this command
      */

@@ -25,10 +25,26 @@ Command newCommand(char* executable, StringList* args) {
     c->input = STDIN_FILENO;
     c->output = STDOUT_FILENO;
     c->error = STDERR_FILENO;
+
+    c->inputToClose = -1;
+    c->outputToClose = -1;
+
     return c;
 }
 
 void freeCommand(Command c) {
+    if (c->inputToClose != -1) {
+        close(c->inputToClose);
+    }
+    if (c->outputToClose != -1) {
+        close(c->outputToClose);
+    }
+    if (c->input != STDIN_FILENO) {
+        close(c->input);
+    }
+    if (c->output != STDOUT_FILENO) {
+        close(c->output);
+    }
     free(c->executable);
     freeList(c->args);
     free(c);
@@ -62,10 +78,13 @@ pid_t __executeNonBuiltin(Command c, char** args) {
     } else if (forked == 0) {
         // Child process; the command we executed.
 
+        if (c->inputToClose != -1) close(c->inputToClose);
+        if (c->outputToClose != -1) close(c->outputToClose);
+
         // Set the file descriptors for IO
-        dup2(c->input, STDIN_FILENO);
-        dup2(c->output, STDOUT_FILENO);
-        dup2(c->error, STDERR_FILENO);
+        if (c->input != STDIN_FILENO) dup2(c->input, STDIN_FILENO);
+        if (c->output != STDOUT_FILENO) dup2(c->output, STDOUT_FILENO);
+        if (c->error != STDERR_FILENO) dup2(c->error, STDERR_FILENO);
 
         // start the comand
         execv(program, args);
@@ -123,6 +142,7 @@ pid_t executeCommand(Command c) {
     // if any of the args are NULL, there was probably a problem with
     // variable expansion
     if (listContains(c->args, NULL)) {
+        lastShellError = "Unknown variable";
         return -1;
     }
     c->args = expandTildes(c->args);

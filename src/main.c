@@ -19,7 +19,7 @@ int main(int argc, const char * argv[]) {
         if (yyparse()) {
             perror(errorMessage);
         }
-        if (lastShellError != NULL) perror(errorMessage);
+        if (lastShellError != NULL) fprintf(stderr, "%s\n", lastShellError);
         lastShellError = NULL;
         free(prompt);
         lineNumber++;
