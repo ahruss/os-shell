@@ -89,7 +89,7 @@ StringList* globPath(char* pattern) {
         pattern = strdup(g.gl_pathv[0]);
     }
     for (int i = 1; i < g.gl_pathc; ++i) {
-        listPush(list, g.gl_pathv[i]);
+        list = listPush(list, g.gl_pathv[i]);
     }
     globfree(&g);
     return list;
@@ -100,14 +100,15 @@ StringList* expandWildcards(StringList* list) {
     StringList* previous = NULL;
     StringList* node = list;
     while (node != NULL) {
+        printf("Node data: %s\n", node->data);
         StringList* expanded = globPath(node->data);
         if (previous == NULL) {
             first = expanded;
         } else {
             previous->next = expanded;
         }
-        tailOf(expanded)->next = node->next;
-        previous = node;
+        previous = tailOf(expanded);
+        previous->next = node->next;
         node = node->next;
     }
     return first;
