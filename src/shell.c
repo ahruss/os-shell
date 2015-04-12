@@ -13,6 +13,7 @@
 int lastReturnCode = 0;
 int lastErrorCode = 0;
 char* lastShellError = NULL;
+int lineNumber = 0;
 
 /**
  Get the list of directories in the PATH
@@ -116,10 +117,16 @@ StringList* expandTildes(StringList* list) {
     StringList* node = list;
     while (node != NULL) {
         if (node->data[0] == '~') {
-            char* dir = getDirectoryFromUser(node->data+1);
-            char* old = node->data;
-            node->data = dir;
-            free(old);
+            // remove the tilde from th username
+            char* username = node->data + 1;
+            char* dir = getDirectoryFromUser(username);
+
+            // if it's a real user, replace it with the expanded version
+            if (dir != NULL) {
+                char* old = node->data;
+                node->data = dir;
+                free(old);
+            }
         }
         node = node->next;
     }

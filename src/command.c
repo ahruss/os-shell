@@ -149,7 +149,6 @@ pid_t executeCommand(Command c) {
     c->args = expandWildcards(c->args);
     
     getExecutable(c);
-
     int argsCount = listLength(c->args);
 
     // need 1 for program + # args + NULL terminator

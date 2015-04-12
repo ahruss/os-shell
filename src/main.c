@@ -8,18 +8,21 @@ int yyparse(void);
 /** 
  Called when we get EOF in yyparse
  */
-int yywrap() { /*exitShell();*/ return 0; }
+int yywrap() { return 0; }
 
 int main(int argc, const char * argv[]) {
     initShell();
     while (true) {
         char* prompt = getPrompt();
+        char errorMessage[127];
+        sprintf(errorMessage, "Error at line %d", lineNumber);
         if (yyparse()) {
-            perror("error");
+            perror(errorMessage);
         }
         if (lastShellError != NULL) fprintf(stderr, "%s\n", lastShellError);
         lastShellError = NULL;
         free(prompt);
+        lineNumber++;
     }
 }
 
