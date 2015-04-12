@@ -7,13 +7,14 @@ int yydebug=1;
 
 %}
 
-%token WORD QUOTE END_OF_STATEMENT PIPE LEFT_ARROW RIGHT_ARROW ERR_EQUALS_OUT ERROR_REDIRECT BACKGROUND OPEN_VARIABLE CLOSE_VARIABLE WHITESPACE
+%token WORD QUOTE END_OF_STATEMENT PIPE LEFT_ARROW RIGHT_ARROW ERR_EQUALS_OUT ERROR_REDIRECT BACKGROUND OPEN_VARIABLE CLOSE_VARIABLE WHITESPACE ERROR
 %%
 
 program         : execution
                         { return 0; }
                 | empty
                         { return 0; }
+                | program program
                 ;
 
 command         : word args
@@ -32,6 +33,8 @@ job             : command
 
 execution       : job stdinRedirect stdoutRedirect stderrRedirect background END_OF_STATEMENT
                         { lastReturnCode = executeJob($1, $2, $3, $4, $5 != NULL); }
+execution       : job stdinRedirect stdoutRedirect stderrRedirect background ERROR
+                        { fprintf(stderr, "Unclosed variable expansion at line: %d.", lineNumber); lastReturnCode = 7; freeJob($1); }
                 ;
 
 stdinRedirect   :

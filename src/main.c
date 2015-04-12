@@ -14,12 +14,13 @@ int main(int argc, const char * argv[]) {
     initShell();
     while (true) {
         char* prompt = getPrompt();
-        char errorMessage[127];
-        sprintf(errorMessage, "Error at line %d", lineNumber);
         if (yyparse()) {
-            perror(errorMessage);
+
         }
-        if (lastShellError != NULL) fprintf(stderr, "%s\n", lastShellError);
+        if (lastShellError != NULL) {
+            fprintf(stderr, "Error at line %d: %s\n", lineNumber,  lastShellError);
+        }
+
         lastShellError = NULL;
         free(prompt);
         lineNumber++;
