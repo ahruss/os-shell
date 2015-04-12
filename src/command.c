@@ -45,7 +45,9 @@ void freeCommand(Command c) {
     if (c->output != STDOUT_FILENO) {
         close(c->output);
     }
-    free(c->executable);
+    if (c->executable != NULL) {
+        free(c->executable);
+    }
     freeList(c->args);
     free(c);
 }
@@ -145,7 +147,7 @@ pid_t executeCommand(Command c) {
     }
     c->args = expandTildes(c->args);
     c->args = expandWildcards(c->args);
-    
+
     getExecutable(c);
     int argsCount = listLength(c->args);
 

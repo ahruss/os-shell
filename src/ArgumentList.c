@@ -7,6 +7,7 @@ StringList* newStringList(char* firstElement) {
     StringList* l = malloc(sizeof(StringList));
     l->data = firstElement != NULL ? strdup(firstElement) : NULL;
     l->next = 0;
+    l->isQuoted = false;
     return l;
 }
 

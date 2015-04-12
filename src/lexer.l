@@ -15,18 +15,18 @@ int yyparse(void);
 char* getPrompt();
 %}
 %%
-\$\{                                     yylval = strdup(yytext);return OPEN_VARIABLE;
-\}                                       yylval = strdup(yytext);return CLOSE_VARIABLE;
-([^\<\>\|\"\\\& \t\n\r\$\{\}]+|\\.)+             yylval = strdup(yytext);return WORD;
-\"                                       yylval = strdup(yytext);return QUOTE;
-[ \t]                                    yylval = strdup(yytext);return WHITESPACE;
-2\>\&1                                   yylval = strdup(yytext);return ERR_EQUALS_OUT;
-2\>                                      yylval = strdup(yytext);return ERROR_REDIRECT;
-\|                                       yylval = strdup(yytext);return PIPE;
-\n|\r                                    yylval = strdup(yytext);return END_OF_STATEMENT;
-\<                                       yylval = strdup(yytext);return LEFT_ARROW;
-\>                                       yylval = strdup(yytext);return RIGHT_ARROW;
-\&                                       yylval = strdup(yytext);return BACKGROUND;
+\$\{                                                yylval = strdup("${");return OPEN_VARIABLE;
+\}                                                  yylval = strdup("}");return CLOSE_VARIABLE;
+([^\<\>\|\"\\\& \t\n\r\$\{\}]+|\\.)+                yylval = strdup(yytext);return WORD;
+\"                                                  yylval = strdup(yytext);return QUOTE;
+[ \t]                                               yylval = strdup(yytext);return WHITESPACE;
+2\>\&1                                              yylval = strdup(yytext);return ERR_EQUALS_OUT;
+2\>                                                 yylval = strdup(yytext);return ERROR_REDIRECT;
+\|                                                  yylval = strdup(yytext);return PIPE;
+[\n|\r]{1,2}                                        yylval = strdup(yytext);return END_OF_STATEMENT;
+\<                                                  yylval = strdup(yytext);return LEFT_ARROW;
+\>                                                  yylval = strdup(yytext);return RIGHT_ARROW;
+\&                                                  yylval = strdup(yytext);return BACKGROUND;
 %%
 
 int readInput(char *buf, int size) {

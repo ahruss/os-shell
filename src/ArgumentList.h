@@ -12,6 +12,7 @@
 typedef struct StringList {
     char* data;
     struct StringList* next;
+    bool isQuoted;
 } StringList;
 
 /**
