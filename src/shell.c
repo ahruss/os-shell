@@ -67,8 +67,8 @@ char* which(char* command) {
 
 
 void exitShell() {
-    printf("Got exit signal, exiting.\n");
-    exit(lastShellError == 0);
+    // if there was an error, return 1; else return 0
+    exit(lastShellError != 0);
 }
 
 char* getPrompt() {
@@ -89,7 +89,7 @@ StringList* globPath(char* pattern) {
         pattern = strdup(g.gl_pathv[0]);
     }
     for (int i = 1; i < g.gl_pathc; ++i) {
-        listPush(list, g.gl_pathv[i]);
+        list = listPush(list, g.gl_pathv[i]);
     }
     globfree(&g);
     return list;
@@ -106,8 +106,8 @@ StringList* expandWildcards(StringList* list) {
         } else {
             previous->next = expanded;
         }
-        tailOf(expanded)->next = node->next;
-        previous = node;
+        previous = tailOf(expanded);
+        previous->next = node->next;
         node = node->next;
     }
     return first;

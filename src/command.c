@@ -51,12 +51,10 @@ void freeCommand(Command c) {
 }
 
 pid_t __executeBuiltin(Command c) {
-
-    // TODO: should probably check here we didn't try to redirect output or input
     int commandIndex = isBuiltin(c->executable);
     assert(commandIndex >= 0);
     // just execute in the current process; builtins need access to our address space
-    executeBuiltin(c->executable, c->args, commandIndex);
+    executeBuiltin(c, commandIndex);
     return 0;
 }
 

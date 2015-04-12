@@ -4,7 +4,7 @@
 
 int isBuiltin(char* command);
 
-int executeBuiltin(char* command, StringList* args, int commandIndex);
+int executeBuiltin(Command c, int commandIndex);
 
 /**
  * Takes a username as input and retursn the full path to their home directory.
