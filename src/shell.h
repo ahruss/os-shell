@@ -19,6 +19,8 @@ extern int lastErrorCode;
  */
 extern char* lastShellError;
 
+extern int lineNumber;
+
 /* need these to hide compiler warnings */
 void yyerror(const char*);
 int yylex();

@@ -11,11 +11,6 @@ int readInput(char *buf, int size);
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) result = readInput(buf, max_size);
 
-#ifdef HAS_READLINE
-#include <readline/readline.h>
-#endif
-
-
 int yyparse(void);
 char* getPrompt();
 %}
@@ -36,10 +31,20 @@ char* getPrompt();
 
 int readInput(char *buf, int size) {
     char *line = NULL;
-    char* prompt = getPrompt();
-    printf("%s", prompt);
-    free(prompt);
-    line = getNextLine();
+    size_t lineSize = 0;
+    if (isatty(fileno(yyin))) {
+        char* prompt = getPrompt();
+        printf("%s", prompt);
+        free(prompt);
+        line = getNextLine();
+    } else {
+        bool result = getline(&line, &lineSize, yyin);
+        if (!result || feof(yyin)) {
+            exitShell();
+            return 0;
+        }
+    }
+
     if (!line) {
         exitShell();
         return 0;

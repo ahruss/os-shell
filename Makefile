@@ -11,16 +11,8 @@ RM=rm -f
 CC=cc
 LD=cc
 
-READLINE_FLAG := $(shell test "x" = "x`locate readline.h`"; echo $$?)
-ifneq ($(READLINE_FLAG), 0)
-	READLINE_LIB = -lreadline
-	READLINE_FLAGS = -DHAS_READLINE
-else
-	READLINE_LIB = 
-	READLINE_FLAGS =
-endif
-CFLAGS=-c -std=c99 -D_GNU_SOURCE $(READLINE_FLAGS)
-LDFLAGS = -std=c99 -I $(SRC) -D_GNU_SOURCE $(READLINE_FLAGS) $(READLINE_LIB)
+CFLAGS=-c -std=c99 -D_GNU_SOURCE
+LDFLAGS = -std=c99 -I $(SRC) -D_GNU_SOURCE 
 
 all: $(PROGRAM)
 

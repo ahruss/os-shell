@@ -129,13 +129,6 @@ pid_t executeCommand(Command c) {
     c->args = expandWildcards(c->args);
     
     getExecutable(c);
-    StringList *tempList = c->args;
-    printf("EXECUTABLE: %s", c->executable);
-    while (tempList != NULL) {
-        printf("ARGS: %s", tempList->data);
-        tempList = tempList->next;
-    }
-
     int argsCount = listLength(c->args);
 
     // need 1 for program + # args + NULL terminator
