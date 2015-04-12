@@ -99,6 +99,7 @@ int executeJob(Job j, redirect_t* in, redirect_t* out,  redirect_t* err, bool in
     free(out);
     free(err);
 
+
     pid_t pids[j->commandCount];
     for (int i = 0; i < j->commandCount; ++i) {
         Command c = j->commands[i];
@@ -115,12 +116,16 @@ int executeJob(Job j, redirect_t* in, redirect_t* out,  redirect_t* err, bool in
 
     // if the job isn't supposed to run in the background, wait for the spawned processes to exit
     if (!inBackground) {
+        awaitedProcessIds = pids;
+        awaitedCount = j->commandCount;
         for (int i = 0; i < j->commandCount; ++i) {
             int code = waitFor(pids[i]);
             if (code != 0) {
                 return code;
             }
         }
+        awaitedProcessIds = NULL;
+        awaitedCount = 0;
     }
     // if we make it down here all the exit codes were 0 (i.e., no error)
     return 0;

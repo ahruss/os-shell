@@ -21,6 +21,9 @@ extern char* lastShellError;
 
 extern int lineNumber;
 
+extern int awaitedCount;
+extern pid_t* awaitedProcessIds;
+
 /* need these to hide compiler warnings */
 void yyerror(const char*);
 int yylex();
@@ -63,5 +66,6 @@ char* getNextLine();
 char* expandVariable(char* name);
 StringList* expandTildes(StringList*);
 StringList* expandWildcards(StringList*);
-
+void tty_raw();
+void tty_reset();
 #endif

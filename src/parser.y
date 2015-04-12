@@ -59,7 +59,7 @@ stderrRedirect   :
 
 background       :
                         { $$ = NULL; }
-                 | BACKGROUND
+                 | whitespace BACKGROUND whitespace
                         { $$ = $1; } ;
 
 args            : whitespace WORD whitespace
@@ -82,6 +82,12 @@ expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE
 word            : whitespace WORD whitespace { $$ = $2; }
                 | whitespace quotedString whitespace { $$ = $2; }
                 | whitespace expandedVariable whitespace { $$ = $2; }
+| whitespace expandedVariable word whitespace
+        {
+            char* str = malloc(sizeof(char) * (strlen($2) + strlen($3) + 1));
+            strcpy(str, $2);
+            strcat(str, $3);
+        }
                 ;
 
 whitespace      : | WHITESPACE | whitespace WHITESPACE ;

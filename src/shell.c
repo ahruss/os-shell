@@ -14,6 +14,8 @@ int lastReturnCode = 0;
 int lastErrorCode = 0;
 char* lastShellError = NULL;
 int lineNumber = 0;
+int awaitedCount = 0;
+int* awaitedProcessIds = NULL;
 
 /**
  Get the list of directories in the PATH
@@ -169,6 +171,8 @@ void tty_reset(void) {
     old.c_lflag |= ICANON;
     old.c_lflag |= ECHO;
     old.c_cc[VINTR] = 1;
+    old.c_cc[VTIME] |= 1;
+    old.c_cc[VMIN] |= 0;
     if (tcsetattr(0, TCSADRAIN, &old) < 0)
         perror ("tcsetattr ~ICANON");
 }
