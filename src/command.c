@@ -32,18 +32,25 @@ Command newCommand(char* executable, StringList* args) {
     return c;
 }
 
+void mclose(int n) {
+    close(n);
+}
+
 void freeCommand(Command c) {
     if (c->inputToClose != -1) {
-        close(c->inputToClose);
+        mclose(c->inputToClose);
     }
     if (c->outputToClose != -1) {
-        close(c->outputToClose);
+        mclose(c->outputToClose);
     }
     if (c->input != STDIN_FILENO) {
-        close(c->input);
+        mclose(c->input);
     }
     if (c->output != STDOUT_FILENO) {
-        close(c->output);
+        mclose(c->output);
+    }
+    if (c->error != STDERR_FILENO) {
+        mclose(c->error);
     }
     if (c->executable != NULL) {
         free(c->executable);
@@ -60,7 +67,7 @@ pid_t __executeBuiltin(Command c) {
     return 0;
 }
 
-pid_t __executeNonBuiltin(Command c, char** args) {
+pid_t __executeNonBuiltin(Command c, char** args, Job j) {
     // figure out which program to run
     char* program = which(c->executable);
 
@@ -78,13 +85,19 @@ pid_t __executeNonBuiltin(Command c, char** args) {
     } else if (forked == 0) {
         // Child process; the command we executed.
 
-        if (c->inputToClose != -1) close(c->inputToClose);
-        if (c->outputToClose != -1) close(c->outputToClose);
+        if (c->inputToClose != -1) mclose(c->inputToClose);
+        if (c->outputToClose != -1) mclose(c->outputToClose);
 
         // Set the file descriptors for IO
         if (c->input != STDIN_FILENO) dup2(c->input, STDIN_FILENO);
         if (c->output != STDOUT_FILENO) dup2(c->output, STDOUT_FILENO);
         if (c->error != STDERR_FILENO) dup2(c->error, STDERR_FILENO);
+
+        for (int i = 0; i < j->commandCount; ++i) {
+            if (j->commands[i] != c) {
+                freeCommand(j->commands[i]);
+            }
+        }
 
         // start the comand
         execv(program, args);
@@ -137,7 +150,7 @@ void getExecutable(Command c) {
  returns the PID of the created process. If we fail to 
  create the process for some reason, returns < 0
  */
-pid_t executeCommand(Command c) {
+pid_t executeCommand(Command c, Job j) {
 
     // if any of the args are NULL, there was probably a problem with
     // variable expansion
@@ -165,7 +178,7 @@ pid_t executeCommand(Command c) {
         spawnedProcess = __executeBuiltin(c);
     }
     else {
-        spawnedProcess = __executeNonBuiltin(c, args);
+        spawnedProcess = __executeNonBuiltin(c, args, j);
     }
     free(args);
     return spawnedProcess;

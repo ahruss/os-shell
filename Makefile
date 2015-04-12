@@ -4,15 +4,15 @@ OBJ=obj/
 BIN=bin/
 PROGRAM=shell
 MKDIR = -@mkdir $(@D) 2>/dev/null || true # use || true to hide the error
-SH_OBJS=ArgumentList.o builtins.o main.o shell.o job.o command.o AliasTable.o
+SH_OBJS=ArgumentList.o builtins.o main.o shell.o job.o command.o AliasTable.o colors.o
 SH_LIST=$(addprefix $(OBJ), $(SH_OBJS))
 RM=rm -f
 
-CC=cc
-LD=cc
+CC=gcc
+LD=gcc
 
-CFLAGS=-c -std=c99 -D_GNU_SOURCE
-LDFLAGS = -std=c99 -I $(SRC) -D_GNU_SOURCE 
+CFLAGS=-c -std=c99 -Wall
+LDFLAGS = -std=c99 -I $(SRC) -Wall
 
 all: $(PROGRAM)
 

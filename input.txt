@@ -1,4 +1,4 @@
-setenv PATH .:/usr/bin:/usr/local/bin:~/Desktop:~Mike/Desktop
+setenv PATH .:/usr/bin:/usr/local/bin:~/Desktop:~Mike/Desktop:/bin
 setenv ARGPATH .:~/Desktop:~Mike/Desktop
 printenv | grep ^PATH
 printenv | grep ARGPATH 
@@ -36,7 +36,6 @@ printenv | grep lsthis
 setenv LIB ~/bin
 printenv | grep LIB
 wc -l foo.txt bar Test.rtf | sort
-cd ~/{LIB}
 setenv LIB ~/Desktop/os_project/os-shell/test-files
 cd "${LIB}/Test"
 ls

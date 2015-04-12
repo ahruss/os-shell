@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		073A92BA1ACDF86700106F2E /* AliasTable.c in Sources */ = {isa = PBXBuildFile; fileRef = 073A92B81ACDF86700106F2E /* AliasTable.c */; };
+		AB2A784B1ADA3D4900F82107 /* colors.c in Sources */ = {isa = PBXBuildFile; fileRef = AB2A784A1ADA3D4900F82107 /* colors.c */; };
 		ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BB51AC6A4A500FC61A6 /* main.c */; };
 		ABE29BC61AC6A4BA00FC61A6 /* ArgumentList.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBD1AC6A4BA00FC61A6 /* ArgumentList.c */; };
 		ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BBF1AC6A4BA00FC61A6 /* builtins.c */; };
@@ -16,7 +17,6 @@
 		ABE29BCA1AC6A4BA00FC61A6 /* shell.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BC31AC6A4BA00FC61A6 /* shell.c */; };
 		ABE29BCD1AC7F5DD00FC61A6 /* job.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCB1AC7F5DD00FC61A6 /* job.c */; };
 		ABE29BD01AC7F5E700FC61A6 /* command.c in Sources */ = {isa = PBXBuildFile; fileRef = ABE29BCE1AC7F5E700FC61A6 /* command.c */; };
-		ABE29BD21AC8B4A600FC61A6 /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +34,8 @@
 /* Begin PBXFileReference section */
 		073A92B81ACDF86700106F2E /* AliasTable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AliasTable.c; sourceTree = "<group>"; };
 		073A92B91ACDF86700106F2E /* AliasTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AliasTable.h; sourceTree = "<group>"; };
+		AB2A78491ADA3B9F00F82107 /* colors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = colors.h; sourceTree = "<group>"; };
+		AB2A784A1ADA3D4900F82107 /* colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = colors.c; sourceTree = "<group>"; };
 		ABE29BB21AC6A4A500FC61A6 /* shell */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = shell; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABE29BB51AC6A4A500FC61A6 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		ABE29BBC1AC6A4BA00FC61A6 /* all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = all.h; sourceTree = "<group>"; };
@@ -52,17 +54,6 @@
 		ABE29BCF1AC7F5E700FC61A6 /* command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = command.h; sourceTree = "<group>"; };
 		ABE29BD11AC8B4A600FC61A6 /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = usr/lib/libreadline.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		ABE29BAF1AC6A4A500FC61A6 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				ABE29BD21AC8B4A600FC61A6 /* libreadline.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		ABE29BA91AC6A4A500FC61A6 = {
@@ -102,6 +93,8 @@
 				ABE29BCE1AC7F5E700FC61A6 /* command.c */,
 				ABE29BCF1AC7F5E700FC61A6 /* command.h */,
 				ABE29BC51AC6A4BA00FC61A6 /* types.h */,
+				AB2A78491ADA3B9F00F82107 /* colors.h */,
+				AB2A784A1ADA3D4900F82107 /* colors.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -114,7 +107,6 @@
 			buildConfigurationList = ABE29BB91AC6A4A500FC61A6 /* Build configuration list for PBXNativeTarget "shell" */;
 			buildPhases = (
 				ABE29BAE1AC6A4A500FC61A6 /* Sources */,
-				ABE29BAF1AC6A4A500FC61A6 /* Frameworks */,
 				ABE29BB01AC6A4A500FC61A6 /* CopyFiles */,
 			);
 			buildRules = (
@@ -171,6 +163,7 @@
 				ABE29BC91AC6A4BA00FC61A6 /* parser.y in Sources */,
 				ABE29BC71AC6A4BA00FC61A6 /* builtins.c in Sources */,
 				ABE29BB61AC6A4A500FC61A6 /* main.c in Sources */,
+				AB2A784B1ADA3D4900F82107 /* colors.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,7 +23,7 @@ char* getPrompt();
 2\>\&1                                              yylval = strdup(yytext);return ERR_EQUALS_OUT;
 2\>                                                 yylval = strdup(yytext);return ERROR_REDIRECT;
 \|                                                  yylval = strdup(yytext);return PIPE;
-\n|\r                                              yylval = strdup(yytext);return END_OF_STATEMENT;
+[\n|\r]{1,2}                                        yylval = strdup(yytext);return END_OF_STATEMENT;
 \<                                                  yylval = strdup(yytext);return LEFT_ARROW;
 \>                                                  yylval = strdup(yytext);return RIGHT_ARROW;
 \&                                                  yylval = strdup(yytext);return BACKGROUND;

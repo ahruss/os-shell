@@ -9,6 +9,7 @@
 #include <termios.h>
 #include "shell.h"
 #include "all.h"
+#include "colors.h"
 
 int lastReturnCode = 0;
 int lastErrorCode = 0;
@@ -74,7 +75,11 @@ void exitShell() {
 }
 
 char* getPrompt() {
-    return strdup("$ ");
+    char path[255];
+    getcwd(path, 255);
+    char* prompt = malloc(sizeof(char) * (300));
+    sprintf(prompt, "%s%s%s $ ", CYAN, path, RESET);
+    return prompt;
 }
 
 char* expandVariable(char* name) {

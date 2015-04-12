@@ -1,8 +1,9 @@
 #include "all.h"
 #include <string.h>
 #include <stdio.h>
+#include "colors.h"
 
-void yyerror(char const* s) { fprintf(stderr, "%s\n", s); }
+void yyerror(char const* s) { fprintf(stderr, "%s at line %d\n", s, lineNumber); }
 int yyparse(void);
 
 /** 
@@ -18,7 +19,7 @@ int main(int argc, const char * argv[]) {
 
         }
         if (lastShellError != NULL) {
-            fprintf(stderr, "Error at line %d: %s\n", lineNumber,  lastShellError);
+            fprintf(stderr, "%sError at line %d: %s%s\n", RED, lineNumber,  lastShellError, RESET);
         }
 
         lastShellError = NULL;

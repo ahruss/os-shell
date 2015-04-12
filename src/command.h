@@ -43,10 +43,11 @@ Command newCommand(char* executable, StringList* args);
 
 void freeCommand(Command);
 
-/**
+#include "job.h"
+/*
  Fork/exec a single command and return the pid of the created command
  */
-pid_t executeCommand(Command);
+pid_t executeCommand(Command, Job);
 
 /**
  Print debug information about a command
