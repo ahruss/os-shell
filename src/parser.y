@@ -69,8 +69,9 @@ expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE
                         { $$ = expandVariable($2); };
 
 word            : whitespace WORD whitespace { $$ = $2; }
-                | quotedString
-                | expandedVariable;
+                | whitespace quotedString whitespace { $$ = $2; }
+                | whitespace expandedVariable whitespace { $$ = $2; }
+                ;
 
 whitespace      : | WHITESPACE | whitespace WHITESPACE ;
 

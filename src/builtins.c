@@ -63,6 +63,39 @@ int unset_env(StringList *stringList) {
     return 1;
 }
 
+/**
+ Checks if a string begins with the given characters
+ */
+bool hasPrefix(const char* string, const char* prefix) {
+    long length = strlen(string);
+    long prefixLength = strlen(prefix);
+    if (prefixLength > length) {
+        return false;
+    } else {
+        for (int i = 0; i < prefixLength; ++i) {
+            if (string[i] != prefix[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+StringList* getUserNames() {
+    StringList *userNameList;
+    struct passwd *p;
+    p = getpwent();
+    if(p != NULL) {
+        userNameList = newStringList(p->pw_name);
+    } else {
+        return NULL;
+    }
+    while ((p = getpwent()) != NULL){
+        listPush(userNameList, p->pw_name);
+    }
+    endpwent();
+    return userNameList;
+}
+
 char* getDirectoryFromUser(char *str) {
     char *s = str;
     int length = 0;
@@ -78,6 +111,29 @@ char* getDirectoryFromUser(char *str) {
         str++;
     }
     name[length] = '\0';
+
+    char* username = NULL;
+    if (length == 0) {
+        username = NULL;
+    } else {
+        StringList* users = getUserNames();
+        StringList* matches = NULL;
+        StringList* node = users;
+        while (node != NULL) {
+            if (hasPrefix(node->data, name)) {
+                matches = listPush(matches, node->data);
+            }
+            node = node->next;
+        }
+        if (listLength(matches) == 1) {
+            username = strdup(findElement(matches, 0));
+        } else {
+            return NULL;
+        }
+        freeList(users);
+        freeList(matches);
+    }
+
     //get rest of the string, use for later after directory switch.
     int stringLen = 0;
     while(*s != '\0') {
@@ -95,9 +151,10 @@ char* getDirectoryFromUser(char *str) {
      home directory from the returned struct.
      */
     char* homeDir;
-    if(length != 0) {
+    if (length != 0) {
         struct passwd *pw;
-        pw = getpwnam(name);
+        pw = getpwnam(username);
+        free(username);
         if(pw == NULL) {
             fprintf(stderr, "Error: invalid User");
             return NULL;

@@ -5,7 +5,7 @@
 
 StringList* newStringList(char* firstElement) {
     StringList* l = malloc(sizeof(StringList));
-    l->data = strdup(firstElement);
+    l->data = firstElement != NULL ? strdup(firstElement) : NULL;
     l->next = 0;
     return l;
 }
@@ -67,7 +67,7 @@ unsigned int listLength(StringList* l) {
 void freeList(StringList* l) {
     if (l != NULL) {
         freeList(l->next);
-        free(l->data);
+        if (l->data != NULL) free(l->data);
         free(l);
     }
 }
