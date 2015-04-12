@@ -67,8 +67,8 @@ char* which(char* command) {
 
 
 void exitShell() {
-    printf("Got exit signal, exiting.\n");
-    exit(lastShellError == 0);
+    // if there was an error, return 1; else return 0
+    exit(lastShellError != 0);
 }
 
 char* getPrompt() {

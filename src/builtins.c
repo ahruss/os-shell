@@ -208,7 +208,6 @@ int alias(StringList *stringList) {
     if(listLength(stringList) == 0) {
         printAliasList();
     } else {
-        printf("LENGTH: %d", listLength(stringList));
         if (!(listLength(stringList) == 2)) {
             fprintf(stderr, "Error: There must be either 0 or 2 arguments to alias");
             return -1;
@@ -250,8 +249,22 @@ int isBuiltin(char* command) {
     return -1;
 }
 
-int executeBuiltin(char* command, StringList* args, int commandIndex) {
-    // TODO: implement builtins
-    printf("Executing builtin: %s, args %p", command, args);
-    return (*builtin_functions[commandIndex])(args);
+int executeBuiltin(Command command, int commandIndex) {
+    int result;
+
+    // redirect output
+    int oldStdout;
+    fflush(stdout);
+    oldStdout = dup(STDOUT_FILENO);
+    dup2(command->output, STDOUT_FILENO);
+
+    result = (*builtin_functions[commandIndex])(command->args);
+
+    // restore old output
+    fflush(stdout);
+    dup2(oldStdout, STDOUT_FILENO);
+    close(oldStdout);
+
+    // return the result of the command
+    return result;
 }
