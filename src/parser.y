@@ -6,6 +6,7 @@
 int yydebug=1;
 
 %}
+%nonassoc REDUCE
 
 %token WORD QUOTE END_OF_STATEMENT PIPE LEFT_ARROW RIGHT_ARROW ERR_EQUALS_OUT ERROR_REDIRECT BACKGROUND OPEN_VARIABLE CLOSE_VARIABLE WHITESPACE ERROR
 %%
@@ -62,33 +63,20 @@ background       :
                  | whitespace BACKGROUND whitespace
                         { $$ = $1; } ;
 
-args            : whitespace WORD whitespace
-                        { $$ = newStringList($2); }
-                | whitespace quotedString whitespace
-                        { $$ = newStringList($2); ((StringList*)$$)->isQuoted = true; }
-                | whitespace expandedVariable whitespace
-                        { $$ = newStringList($2); }
-                | args whitespace WORD whitespace
-                        { $$ = listPush($1, $3); }
-                | args whitespace quotedString whitespace
-                        { $$ = listPush($1, $3); tailOf($$)->isQuoted = true; }
-                | args whitespace expandedVariable whitespace
-                        { $$ = listPush($1, $3); }
+word            : whitespace WORD whitespace { $$ = $2; }
+                | whitespace quotedString whitespace { $$ = $2; }
+                | whitespace expandedVariable whitespace { $$ = $2; }
+                ;
+
+args            : word { $$ = newStringList($1); }
+                | quotedString { $$ = newStringList($1); ((StringList*)$$)->isQuoted = true;}
+                | args word { $$ = listPush($1, $2); } %prec REDUCE
+                | args quotedString { $$ = listPush($1, $2); tailOf($$)->isQuoted = true;}
                 ;
 
 expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE
                         { $$ = expandVariable($2); };
 
-word            : whitespace WORD whitespace { $$ = $2; }
-                | whitespace quotedString whitespace { $$ = $2; }
-                | whitespace expandedVariable whitespace { $$ = $2; }
-| whitespace expandedVariable word whitespace
-        {
-            char* str = malloc(sizeof(char) * (strlen($2) + strlen($3) + 1));
-            strcpy(str, $2);
-            strcat(str, $3);
-        }
-                ;
 
 whitespace      : | WHITESPACE | whitespace WHITESPACE ;
 
@@ -102,7 +90,7 @@ quoteParts      : quotePart
                         { $$ = listPush($1, $2); }
                 ;
 
-quotedString    : QUOTE quoteParts QUOTE
-                        { $$ = joinWords($2); }
+quotedString    : whitespace QUOTE quoteParts QUOTE whitespace
+                        { $$ = joinWords($3); }
                 ;
 %%

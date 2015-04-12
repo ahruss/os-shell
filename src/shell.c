@@ -206,7 +206,9 @@ char* getNextLine() {
     tty_raw();
     while (true) {
         char c = getchar();
-        if (c == 27) {
+        if (c == -1) {
+            // do nothing
+        } else if (c == 27) {
             // escape, expand paths
 
             // find the beginning of the last word

@@ -106,7 +106,7 @@ int executeJob(Job j, redirect_t* in, redirect_t* out,  redirect_t* err, bool in
         pids[i] = executeCommand(c);
 
         // failed to start executing the commands
-        if (pids[i] <= 0) {
+        if (pids[i] < 0) {
             freeJob(j);
             return -1;
         }
