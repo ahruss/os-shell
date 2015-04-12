@@ -21,7 +21,7 @@ AliasList* newAliasList(char* firstAlias, char *firstValue, StringList* args) {
 }
 
 unsigned int aliasListLength(AliasList* l) {
-    if (l == 0) {
+    if (l == NULL) {
         return 0;
     }
     else {
@@ -56,7 +56,7 @@ AliasList* aliasListPush(AliasList* l, char* alias, char *value, StringList *arg
         printf("Error: infinite expansion would result.");
         return 0;
     }
-    if(aliasListLength(l) == 0) {
+    if(aliasListLength(aliasList) == 0) {
         l = newAliasList(alias, value, args);
         aliasList = l;
     } else {
@@ -76,15 +76,15 @@ AliasList* aliasListPush(AliasList* l, char* alias, char *value, StringList *arg
 }
 
 AliasList* aliasListRemove(AliasList* l, char* alias) {
-    if(aliasListLength(l) <= 0){
-        return l;
-    } else if (aliasListLength(l) == 1) {
-        AliasList* first = l->next;
+    if(aliasListLength(aliasList) <= 0){
+        return 0;
+    } else if (aliasListLength(aliasList) == 1) {
+        AliasList* first = l;
         if (strcmp(first->alias, alias) == 0) {
-            freeAliasList(l);
+            freeAliasList(aliasList);
             return 0;
         }
-        return l;
+        return 0;
     }
     if(strcmp(l->alias, alias) == 0) {
         l = l->next;
@@ -95,15 +95,14 @@ AliasList* aliasListRemove(AliasList* l, char* alias) {
     AliasList* second = l;
     while (first != 0) {
         if(strcmp(first->alias, alias) == 0) {
-            AliasList *tmp = first;
             second->next = first->next;
             free(first);
-            return tmp;
+            return aliasList;
         }
         first = first->next;
         second = second->next;
     }
-    return l;
+    return aliasList;
 }
 
 void printAliasList() {
@@ -111,7 +110,7 @@ void printAliasList() {
     for(int i = 0; i < aliasListLength(aliasList); i++) {
         printf("%s=%s", l->alias, l->value);
         StringList *tempList = l->argsList;
-        for(int j = 0; j < listLength(tempList); j++) {
+        for(int j = 0; j < listLength(l->argsList); j++) {
             printf(" %s", tempList->data);
             tempList = tempList->next;
         }
@@ -150,10 +149,10 @@ StringList* parseAliasArgs(StringList *stringList) {
 
 void freeAliasList(AliasList* l) {
     if (l != NULL) {
-        freeAliasList(l->next);
         freeList(l->argsList);
         free(l->alias);
         free(l->value);
         free(l);
+        freeAliasList(l->next);
     }
 }
