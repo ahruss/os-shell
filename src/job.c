@@ -83,6 +83,15 @@ void pipeCommandTo(Command c, Job j) {
 }
 
 int executeJob(Job j, redirect_t* in, redirect_t* out,  redirect_t* err, bool inBackground) {
+
+    for (int i = 0; i < j->commandCount; ++i) {
+        if (j->commands[i]->executable == NULL) {
+            lastShellError = "Unknown environment variable.";
+            freeJob(j);
+            return -1;
+        }
+    }
+
     if (!setStdin(j, in) || !setStdout(j, out) || !setStderr(j, err)) {
         return 1;
     }

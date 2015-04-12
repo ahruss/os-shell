@@ -62,10 +62,18 @@ background       :
                  | BACKGROUND
                         { $$ = $1; } ;
 
-args            : word
-                        { $$ = newStringList($1); }
-                | args word
-                        { $$ = listPush($1, $2); }
+args            : whitespace WORD whitespace
+                        { $$ = newStringList($2); }
+                | whitespace quotedString whitespace
+                        { $$ = newStringList($2); ((StringList*)$$)->isQuoted = true; }
+                | whitespace expandedVariable whitespace
+                        { $$ = newStringList($2); }
+                | args whitespace WORD whitespace
+                        { $$ = listPush($1, $3); }
+                | args whitespace quotedString whitespace
+                        { $$ = listPush($1, $3); tailOf($$)->isQuoted = true; }
+                | args whitespace expandedVariable whitespace
+                        { $$ = listPush($1, $3); }
                 ;
 
 expandedVariable : OPEN_VARIABLE WORD CLOSE_VARIABLE

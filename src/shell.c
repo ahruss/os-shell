@@ -77,6 +77,9 @@ char* getPrompt() {
 
 char* expandVariable(char* name) {
     char* value = getenv(name);
+    if (value != NULL) {
+        value = strdup(value);
+    }
     return value;
 }
 
@@ -100,15 +103,20 @@ StringList* expandWildcards(StringList* list) {
     StringList* previous = NULL;
     StringList* node = list;
     while (node != NULL) {
-        StringList* expanded = globPath(node->data);
-        if (previous == NULL) {
-            first = expanded;
+        if (node->isQuoted) {
+            previous = node;
+            node = node->next;
         } else {
-            previous->next = expanded;
+            StringList* expanded = globPath(node->data);
+            if (previous == NULL) {
+                first = expanded;
+            } else {
+                previous->next = expanded;
+            }
+            previous = tailOf(expanded);
+            previous->next = node->next;
+            node = node->next;
         }
-        previous = tailOf(expanded);
-        previous->next = node->next;
-        node = node->next;
     }
     return first;
 }
@@ -116,7 +124,7 @@ StringList* expandWildcards(StringList* list) {
 StringList* expandTildes(StringList* list) {
     StringList* node = list;
     while (node != NULL) {
-        if (node->data[0] == '~') {
+        if (!node->isQuoted && node->data[0] == '~') {
             // remove the tilde from th username
             char* username = node->data + 1;
             char* dir = getDirectoryFromUser(username);
