@@ -100,7 +100,6 @@ StringList* expandWildcards(StringList* list) {
     StringList* previous = NULL;
     StringList* node = list;
     while (node != NULL) {
-        printf("Node data: %s\n", node->data);
         StringList* expanded = globPath(node->data);
         if (previous == NULL) {
             first = expanded;
