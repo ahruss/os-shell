@@ -3,3 +3,4 @@
 shell
 tmp
 obj
+test-files/*
