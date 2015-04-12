@@ -111,7 +111,7 @@ void printAliasList() {
     for(int i = 0; i < aliasListLength(aliasList); i++) {
         printf("%s=%s", l->alias, l->value);
         StringList *tempList = l->argsList;
-        for(int j = 0; j < listLength(tempList); j++) {
+        for(int j = 0; j < listLength(l->argsList); j++) {
             printf(" %s", tempList->data);
             tempList = tempList->next;
         }
