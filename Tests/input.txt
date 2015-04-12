@@ -1,0 +1,48 @@
+setenv PATH .:/usr/bin:/usr/local/bin:~/Desktop:~Mike/Desktop
+setenv ARGPATH .:~/Desktop:~Mike/Desktop
+printenv | grep PATH
+printenv | grep ARGPATH 
+cd
+cd Desktop/os_project/os-shell/test-files
+ls -1
+ls Test
+cd ~Mike/Desktop
+ls
+cd Desktop/os_project/os-shell/test-files
+cd ./Test
+ls
+cd ..  
+cd ../test-files/Test
+ls
+cd ~/Desktop/os_project/os-shell/test-files/Test
+ls
+cd..
+alias lo logout
+alias
+alias rot13 "tr a-zA-Z n-za-mN-ZA-M"
+alias
+rot13 < foo.txt > bar
+cat bar
+ls -1 *.c foo.tx?
+alias lo jj
+alias
+alias jj "ls -al"
+alias
+lo
+setenv this .
+printenv | grep this
+setenv lsthis "jj ${this}"
+printenv | grep lsthis
+setenv LIB ~/bin
+printenv | grep LIB
+wc -l foo.txt bar Test.rtf | sort
+cd ~/{LIB}
+setenv LIB ~/Desktop/os_project/os-shell/test-files
+cd "${LIB}/Test"
+ls
+setenv LIB ~/Desktop
+printenv | grep LIB
+unsetenv LIB
+printenv | grep LIB
+unalias rot13
+alias

@@ -1,0 +1,47 @@
+.:/usr/bin:/usr/local/bin:~/Desktop:~Mike/Desktop
+.:~/Desktop:~Mike/Desktop
+Test
+Test copy 2.rtf
+Test copy.rtf
+Test.rtf
+bar
+foo.txt
+Testing.rtf
+untitled folder
+Testing.rtf
+Testing.rtf
+Testing.rtf
+lo=logout
+lo=logout
+rot13=tr a-zA-Z n-za-mN-ZA-M
+Grfgvat
+Test1.c
+Test2.c
+foo.txt
+lo=jj
+rot13=tr a-zA-Z n-za-mN-ZA-M
+lo=jj
+rot13=tr a-zA-Z n-za-mN-ZA-M
+jj=ls -al
+drwxr-xr-x  11 Eric  staff   374 Apr 11 22:38 .
+drwxr-xr-x  12 Eric  staff   408 Apr 11 22:17 ..
+-rw-r--r--@  1 Eric  staff  6148 Apr 11 22:38 .DS_Store
+drwxr-xr-x   4 Eric  staff   136 Apr 11 21:45 Test
+-rw-r--r--@  1 Eric  staff   307 Apr 11 21:32 Test copy 2.rtf
+-rw-r--r--@  1 Eric  staff   307 Apr 11 21:32 Test copy.rtf
+-rw-r--r--@  1 Eric  staff   307 Apr 11 21:32 Test.rtf
+-rw-r--r--@  1 Eric  staff     7 Apr 11 22:21 Test1.c
+-rw-r--r--@  1 Eric  staff     7 Apr 11 22:21 Test2.c
+-rw-r--r--   1 Eric  staff     7 Apr 11 22:21 bar
+-rw-r--r--@  1 Eric  staff     7 Apr 11 22:21 foo.txt
+this=.
+lsthis=jj .
+LIB=/Users/Eric/bin
+  1 bar
+  1 foo.txt
+  6 Test.rtf
+  8 total
+Testing.rtf
+LIB=/Users/Eric/Desktop
+lo=jj
+jj=ls -al

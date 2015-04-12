@@ -1,0 +1,15 @@
+ARGPATH=.:~/Desktop:~Mike/Desktop
+PATH=.:/usr/bin:/usr/local/bin:~/Desktop:~Mike/Desktop
+lo=logout
+lo=logout
+rot13=tr a-zA-Z n-za-mN-ZA-M
+lo=jj
+rot13=tr a-zA-Z n-za-mN-ZA-M
+lo=jj
+rot13=tr a-zA-Z n-za-mN-ZA-M
+jj=ls -al
+this=.
+lsthis=jj .
+LIB=/Users/Eric/bin
+       0 total
+{LIB=/Users/Eric/Desktop
