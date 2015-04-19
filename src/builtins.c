@@ -36,11 +36,11 @@ int (*builtin_functions[]) (StringList *) = {
 
 int set_env(StringList *stringList) {
     if(listLength(stringList) != 2) {
-        fprintf(stderr, "Error: There must be exactly two arguments for setenv");
+        fprintf(stderr, "Error: There must be exactly two arguments for setenv\n");
         return -1;
     }
     if(setenv(findElement(stringList, 0), findElement(stringList, 1), 1) != 0) {
-        fprintf(stderr, "Error: There is insufficient space in the environment. ");
+        fprintf(stderr, "Error: There is insufficient space in the environment.\n");
     }
     return 1;
 }
@@ -56,7 +56,7 @@ int printenv(StringList *stringList) {
 
 int unset_env(StringList *stringList) {
     if(listLength(stringList) != 1) {
-        fprintf(stderr, "Error: There must be exactly 1 argument for unset_env");
+        fprintf(stderr, "Error: There must be exactly 1 argument for unset_env\n");
         return -1;
     }
     unsetenv(findElement(stringList, 0));
@@ -156,7 +156,7 @@ char* getDirectoryFromUser(char *str) {
         pw = getpwnam(username);
         free(username);
         if(pw == NULL) {
-            fprintf(stderr, "Error: invalid User");
+            fprintf(stderr, "Error: invalid User\n");
             return NULL;
         }
         homeDir = (pw->pw_dir);
@@ -172,7 +172,7 @@ char* getDirectoryFromUser(char *str) {
 
 int cd(StringList *stringList) {
     if(listLength(stringList)  > 1) {
-        fprintf(stderr, "Error: There must be either 0 or 1 argument to cd");
+        fprintf(stderr, "Error: There must be either 0 or 1 argument to cd\n");
         return -1;
     }
     if(listLength(stringList) == 0) {
@@ -187,7 +187,7 @@ int cd(StringList *stringList) {
                 char* directory = getDirectoryFromUser(str);
                 if(chdir(directory) != 0) {
                     free(directory);
-                    fprintf(stderr, "Error: invalid directory");
+                    fprintf(stderr, "Error: invalid directory\n");
                     return -1;
                 } else {
                     free(directory);
@@ -195,7 +195,7 @@ int cd(StringList *stringList) {
             }
         } else {
             if(chdir(str) != 0) {
-                fprintf(stderr, "Error: invalid directory or not enough perissions");
+                fprintf(stderr, "Error: invalid directory or not enough perissions\n");
                 return -1;
             }
         }
@@ -205,11 +205,15 @@ int cd(StringList *stringList) {
 
 int alias(StringList *stringList) {
     //list all aliases in AliasTable
-    if(listLength(stringList) == 0) {
+    if (listLength(stringList) == 0) {
         printAliasList();
     } else {
+        if (isAlias(findElement(stringList, 0))) {
+            printf("Warning: replacing existing alias.\n");
+            aliasList = aliasListRemove(aliasList, findElement(stringList, 0));
+        } 
         if (!(listLength(stringList) == 2)) {
-            fprintf(stderr, "Error: There must be either 0 or 2 arguments to alias");
+            fprintf(stderr, "Error: There must be either 0 or 2 arguments to alias\n");
             return -1;
         }
         StringList *argsList = parseAliasArgs(stringList);
@@ -224,7 +228,7 @@ int alias(StringList *stringList) {
 
 int unalias(StringList *stringList) {
     if(listLength(stringList) != 1) {
-        fprintf(stderr, "Error: There must be 1 argument to unalias");
+        fprintf(stderr, "Error: There must be 1 argument to unalias\n");
         return -1;
     }
     aliasList = aliasListRemove(aliasList, findElement(stringList, 0));
@@ -233,7 +237,7 @@ int unalias(StringList *stringList) {
 
 int bye(StringList *stringList) {
     if(listLength(stringList) != 0) {
-        fprintf(stderr, "Error: There must be either 0 arguments to bye");
+        fprintf(stderr, "Error: There must be either 0 arguments to bye\n");
         return -1;
     }
     exitShell();

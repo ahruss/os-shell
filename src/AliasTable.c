@@ -53,7 +53,7 @@ bool isValidAlias(char* alias, char *value) {
 
 AliasList* aliasListPush(AliasList* l, char* alias, char *value, StringList *args) {
     if(!isValidAlias(alias, value)) {
-        printf("Error: infinite expansion would result.");
+        printf("Error: infinite expansion would result.\n");
         return 0;
     }
     if(aliasListLength(aliasList) == 0) {

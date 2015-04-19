@@ -11,8 +11,8 @@ RM=rm -f
 CC=gcc
 LD=gcc
 
-CFLAGS=-c -std=c99 -Wall
-LDFLAGS = -std=c99 -I $(SRC) -Wall
+CFLAGS=-c -std=c99
+LDFLAGS = -std=c99 -I $(SRC)
 
 all: $(PROGRAM)
 
